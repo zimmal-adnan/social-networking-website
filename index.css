@@ -1,0 +1,206 @@
+@font-face {
+    font-family: "Gill Sans";
+    src: url(../Fonts/Gill_Sans.ttf);
+}
+
+@font-face {
+    font-family: "Garet";
+    src: url(../Fonts/Garet-Book.otf);
+}
+@font-face {
+    font-family: "GaretBold";
+    src: url(../Fonts/Garet-Heavy.otf);
+}
+
+
+body {
+    background-image: url("../Images/Space.jpg");
+    background-size: cover;        
+    background-position: center;   
+    background-repeat: no-repeat;  
+    height: 100vh;         
+    overflow: hidden;       
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;  
+    align-items: center;
+}
+
+.website-name{
+    font-family: 'Gill Sans';                                                              
+    letter-spacing: 1rem;
+    font-size: 5rem;
+    color: white;
+    display: flex;
+    margin: 0;
+}
+
+.website-tagline{
+    font-family: 'Garet';  
+    font-size: 1.2rem;   
+    color: white;                                                         
+}
+
+hr{
+    width: 40%;
+}
+
+.website-introduction{
+    text-align: center;
+    margin-top: -15rem;
+}
+
+.orbit{
+    position: fixed;
+    left: 50%;
+    top: 60%; 
+    width: 240rem; 
+    height: 100rem;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.orbiter{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    height: 30rem;
+    animation: orbit 80s linear infinite;
+    transform-origin: center 90rem;
+}
+
+@keyframes orbit { 
+    from { 
+        transform: translate(-50%) rotate(0deg); } 
+    to { 
+        transform: translate(-50%) rotate(360deg); 
+    } 
+}
+
+.orbit .earth{
+    position: fixed;     
+    left: 50%;
+    top: 50%;
+    height: auto;
+    width: 165rem;        
+    animation: rotateEarth 80s linear infinite;
+}
+
+@keyframes rotateEarth {
+    from {
+        transform: translateX(-50%) rotate(0deg);
+    }
+    to {
+        transform: translateX(-50%) rotate(360deg);
+    }
+}
+
+.orbiter .building{
+    position: absolute;  
+    top: -25%;    
+    width: 5rem;             
+    height: auto;
+    pointer-events: none;
+    animation: buildingRotate 80s linear infinite;
+}
+
+.orbiter .lighthouse-alexandria{
+    top: -10%;
+    left: 10rem; 
+    animation: lighthouseRotate 80s linear infinite;
+}
+
+.orbiter .pyramids{
+    top: 40%;
+    width: 8rem;
+    left: -50rem; 
+    animation: pyramidRotate 80s linear infinite;
+}
+
+.orbiter .burj-khalifa{
+    top: 40rem;
+    width: 8rem;
+    left: -90rem; 
+    animation: burjRotate 140s linear infinite;
+}
+
+@keyframes burjRotate{
+    0% { 
+        transform: rotate(-90deg); 
+    }   
+    55%{
+        transform: rotate(90deg); 
+    }
+    60%{
+        transform: rotate(300deg); 
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pyramidRotate {
+    0% { 
+        transform: rotate(-50deg); 
+    }   
+    55%{
+        transform: rotate(90deg); 
+    }
+    60%{
+        transform: rotate(300deg); 
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes lighthouseRotate {
+    0% { 
+        transform: rotate(10deg); 
+    }   
+    55%{
+        transform: rotate(90deg); 
+    }
+    60%{
+        transform: rotate(300deg); 
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}
+
+
+@keyframes buildingRotate {
+    0% { 
+        transform: rotate(0deg); 
+    }   
+    55%{
+        transform: rotate(90deg); 
+    }
+    60%{
+        transform: rotate(300deg); 
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}
+
+#shooting-star{
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #ffffff;
+    border-radius: 50%;
+    opacity: 0;
+}
+
+#shooting-star::before{
+    content:'';
+    position: absolute;
+    width: 13rem;
+    height: 1px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(90deg,#ffffff81,transparent);
+}

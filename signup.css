@@ -1,0 +1,264 @@
+@font-face {
+    font-family: "Gill Sans";
+    src: url(../Fonts/Gill_Sans.ttf);
+}
+
+@font-face {
+    font-family: "Garet";
+    src: url(../Fonts/Garet-Book.otf);
+}
+@font-face {
+    font-family: "GaretBold";
+    src: url(../Fonts/Garet-Heavy.otf);
+}
+
+@font-face {
+    font-family: "Economica";
+    src: url(../Fonts/Economica-Regular.ttf);
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    flex-direction: column;
+    gap: 2rem;
+    position: relative;
+    overflow-y: hidden;
+}
+
+.signup, .login{
+    font-family: "GaretBold";
+    border: 5px solid #083839;
+    color: #083839;
+    border-radius: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 25rem;
+    padding: 2rem;
+    background-color: #e0e7cf65;
+    text-align: center;
+    cursor: pointer;      
+    transition: all 0.6s ease;
+    height: 7rem; 
+    opacity: 1;
+}
+
+.signup:hover, .signup.locked {
+    height: 65vh;       
+    opacity: 1;
+}
+
+.login:hover, .login.locked {
+    height: 45vh;       
+    opacity: 1;
+}
+
+.login.locked {
+    transform: translate(0%, -25%);
+}
+
+.signup.locked{
+    transform: translate(0%, 15%);
+}
+
+
+body:has(.signup:hover) .login,
+body:has(.signup.locked) .login {
+    opacity: 0;
+    pointer-events: none;
+}
+
+body:has(.login:hover) .signup,
+body:has(.login.locked) .signup {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.signup h1, .login h1{
+    letter-spacing: 5px;
+    font-size: 3rem;
+    margin: 0;
+    margin-top: 4rem;
+    transition: all 0.8s ease;  
+}
+
+.login h1{
+    margin-top: 10rem;
+}
+
+.signup h2, .login h2{
+    font-family: "Garet";
+    margin: 0;
+    font-size: 0.8rem;
+}
+
+
+.signup form, .signup button, .signup hr, .signup h3,
+.login form, .login button, .login hr, .login h3 {
+    opacity: 0;
+    transition: all 0.6s ease;
+}
+
+
+.signup:hover form, .signup:hover button, .signup:hover hr, .signup:hover h3,
+.login:hover form, .login:hover button, .login:hover hr, .login:hover h3 {
+    opacity: 1;
+    max-height: 20rem;
+}
+
+.signup.locked form, .signup.locked button, .signup.locked hr, .signup.locked h3,
+.login.locked form, .login.locked button, .login.locked hr, .login.locked h3 {
+    opacity: 1;
+    max-height: 20rem;
+}
+
+.signup:hover h1,
+.login:hover h1,
+.signup.locked h1,
+.login.locked h1 {
+    margin-top: -2rem;     /* NEW */
+}
+
+
+
+.registration-button{
+    background-color: #5c836e;
+    border: 2px solid black;
+    border-radius: 0.7rem;
+    letter-spacing: 1px;
+    font-size: 1.2rem;
+    padding: 0.3rem 1rem;
+    font-family: "GaretBold";
+    position: relative;
+    top: 1rem;
+    bottom: 0.6rem;
+
+}
+
+
+.signup h3, .login h3{
+    font-family: "Garet";
+    margin: 0;
+    position: relative;
+    top: 1.2rem;
+    font-size: 0.6rem;
+}
+
+.input-field{
+    position: relative;
+    width: 20rem;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.input-field::before{
+    content: "";
+    position: absolute;
+    left: 2rem;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: #000;
+    border-radius: 1px;
+}
+
+.input-with-line{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.75rem 1rem;
+    padding-left: 2.5rem; 
+    border: 1px solid black;
+    border-radius: 0.5rem;
+    background: rgba(255,255,255,0.6);
+    outline: none;
+    font-family: "Economica";
+    letter-spacing: 1px;
+}
+
+.input-with-line:focus{
+    border: 2px solid black;
+}
+
+.link-text{
+    font-family: "GaretBold";
+    font-size: 0.8rem;
+    color: #5d7a19;
+}
+
+.profile-input-field{
+    position: relative;
+    width: 20rem;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.profile-picture {
+    width: 5.5rem;
+    height: 5.5rem;
+    border-radius: 100rem;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.4s ease;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.profile-picture:hover {
+    transform: scale(1.05);
+    border-color: white;
+    box-shadow: 0 6px 25px rgba(255, 255, 255, 0.3), inset 0 0 30px rgba(255, 255, 255, 0.1);
+}
+
+#input-file {
+    display: none;
+}
+
+.upload{
+    border: 2px solid black;
+    margin-top: 1rem;
+    padding: 0.3rem 1rem;
+    font-family: "Garet";
+    font-size: 0.7rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    background-color: #8ba396;
+}
+
+
+.form-scroll {
+    margin-left: 1rem;
+    width: 21rem;
+    max-height: 40vh;    
+    overflow-y: auto;     
+    overflow-x: hidden;   
+}
+
+.form-scroll::-webkit-scrollbar {
+    width: 5px;
+}
+
+.form-scroll::-webkit-scrollbar-thumb {
+    background: #5c836e;
+    border-radius: 10px;
+}
+
+.form-scroll::-webkit-scrollbar-track {
+    background: #88a39598;
+}
+
+.form-scroll::-webkit-scrollbar-thumb:hover {
+    background: #4a6356;
+}
+
+
+

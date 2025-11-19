@@ -1,0 +1,230 @@
+@font-face {
+    font-family: "Gill Sans";
+    src: url(../Fonts/Gill_Sans.ttf);
+}
+
+@font-face {
+    font-family: "Garet";
+    src: url(../Fonts/Garet-Book.otf);
+}
+@font-face {
+    font-family: "GaretBold";
+    src: url(../Fonts/Garet-Heavy.otf);
+}
+
+@font-face {
+    font-family: "Economica";
+    src: url(../Fonts/Economica-Regular.ttf);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+main {
+    max-width: 85%;
+    margin: 3rem auto;
+    padding: 1.5rem 1rem;
+    border-radius: 2rem;
+    background-color: #8ba396;
+    border: 3px solid #083839;
+}
+
+main h1 {
+    font-family: "GaretBold";
+    color: #083839;
+    font-size: 2.5rem;
+    letter-spacing: 3px;
+    text-align: center;
+}
+
+
+.top-section {
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.create-collection {
+    font-family: "Garet";
+    background-color: #3c5c4b;
+    color: white;
+    border: 2px solid black;
+    padding: 0.6rem 1rem;
+    border-radius: 0.4rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.create-collection:hover {
+    background-color: #2b4538;
+}
+
+
+.search-filter {
+    font-family: "Garet";
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: 1px;
+    color: white;
+    font-size: 1.2rem;
+    margin-top: -0.5rem;
+    cursor: pointer;
+}
+
+
+.post-collections {
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-height: 30rem;
+    border-radius: 0 0 20px 20px;
+    position: relative;
+}
+
+
+.post-collections::-webkit-scrollbar {
+    width: 8px;
+}
+
+.post-collections::-webkit-scrollbar-thumb {
+    background: #5c836e;
+    border-radius: 10px;
+}
+
+.post-collections::-webkit-scrollbar-track {
+    background: #718d7e98;
+}
+
+.post-collections::-webkit-scrollbar-thumb:hover {
+    background: #4a6356;
+}
+
+
+.collection-card {
+    display: flex;
+    flex-direction: row;    
+    overflow: hidden;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.collection-card:hover {
+    transform: translateY(-5px);
+}
+
+.post-username{
+    font-family: "Garet";
+}
+
+
+
+.collection-image {
+    display: flex;
+    flex-direction: column;      
+    background-color: white;    
+    width: 100%;
+    height: 100%;                
+    justify-content: space-between; 
+            
+    box-sizing: border-box;           
+}
+
+.card-image {
+    border-right: 3px solid white;
+    border-left: 3px solid white;
+    align-items: center;
+    max-height: 10rem;            
+    object-fit: cover;
+    margin-bottom: 1rem;
+}
+
+.collection-confirmation {
+    width: 50%;      
+    background-color: #637c6f;
+    padding: 1rem;
+    border: 2px solid #b6c29a;
+    border-radius: 0 1rem 1rem 0;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.8rem;
+    text-align: center;
+}
+
+.collection-confirmation h3 {
+    font-family: "GaretBold";
+    letter-spacing: 1px;
+    word-spacing: 2px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    margin-top: 0.3rem;
+}
+
+.collection-card {
+    align-items: stretch;  
+}
+
+
+.bottom-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.upper-left{
+    margin-left: -0.4rem;
+}
+
+
+.collection-confirmation button {
+    font-family: "Garet";
+    background-color: #749081;
+    color: white;
+    border: 2px solid #b6c29a;
+    padding: 0.5rem 1rem;
+    border-radius: 0.6rem;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.collection-confirmation button:hover {
+    background-color: #2b4538;
+}
+
+/* Responsive Design */
+/*@media (max-width: 768px) {
+    main h1 {
+        font-size: 24px;
+    }
+
+    .top-section {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .collections-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .collections-grid {
+        grid-template-columns: 1fr;
+    }
+}*/

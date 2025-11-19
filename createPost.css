@@ -1,0 +1,245 @@
+@font-face {
+    font-family: "Gill Sans";
+    src: url(../Fonts/Gill_Sans.ttf);
+}
+
+@font-face {
+    font-family: "Garet";
+    src: url(../Fonts/Garet-Book.otf);
+}
+@font-face {
+    font-family: "GaretBold";
+    src: url(../Fonts/Garet-Heavy.otf);
+}
+
+@font-face {
+    font-family: "Economica";
+    src: url(../Fonts/Economica-Regular.ttf);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.create-post-header{
+    font-family: "GaretBold";
+    background-color: #083839;
+    text-align: center;
+    height: 6rem;
+    margin: 2rem 0;
+    padding: 1rem 0rem;
+    border-bottom: 3px solid white;
+    border-top: 3px solid white;
+}
+
+.header-title {
+    word-spacing: 10px;
+    color: white;
+    font-size: 2.5rem;
+    letter-spacing: 3px;
+}
+
+
+main {
+    max-width: 50rem;
+    margin: 1rem auto;
+    background-color: #8ba396;
+    border-radius: 0.8rem;
+    padding: 1rem;
+    border: 3px solid #083839;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.post-and-caption{
+    display: flex;
+}
+
+.post-input,
+.caption-input {
+    height: 25rem;   
+    flex: 0 0 49%;
+    max-width: 49%;
+}
+
+.post-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    margin-right: 1rem;
+    height: 25rem;
+}
+
+.post-picture {
+    width: 100%;
+    flex-grow: 1;
+    object-fit: cover;
+    background-color: #c8d8e4;
+    border: 3px solid #7a8d7f;
+}
+
+#input-file {
+    display: none;
+}
+
+.upload {
+    margin-top: 0.8rem;
+    font-family: "Garet";
+    background-color: #3c5c4b;
+    color: white;
+    border: 2px solid black;
+    padding: 0.5rem 2rem;
+    border-radius: 0.7rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.3s;
+}
+
+.upload:hover {
+    background-color: #4a5d4f;
+}
+
+.upload i {
+    font-size: 1rem;
+}
+
+
+.caption-input {
+    background-color: #637c6f;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+}
+
+.caption-input h2 {
+    font-family: "Garet";
+    letter-spacing: 0.5px;
+    color: white;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.add-caption{
+    flex-grow: 1;      
+    border: none;
+    background-color: #4f665b;
+    width: 100%;
+    height: 12rem;
+    font-family: "Economica";
+    font-size: 1rem;
+    color: white;
+    padding: 0.5rem;
+    resize: none;    
+    border-radius: 0.3rem;
+}
+
+.budget-input {
+    margin: 1rem 0;
+    margin-bottom: 0rem;
+    font-family: "Economica";
+    width: 100%;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    border: 1px solid black;
+    background-color: #8ba396;
+    font-size: 0.9rem;
+    color: black;
+    flex-shrink: 0;
+}
+
+.budget-input::placeholder{
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.location-input {
+    margin-top: 2rem;
+}
+
+.location-input h2 {
+    font-family: "GaretBold";
+    color: #083839;
+    font-size: 2rem;
+    margin-top: 2rem;
+    margin-bottom: -0.5rem;
+    text-align: center;
+}
+
+.location-input img {
+    display: block;
+    box-sizing: border-box; 
+    width: calc(100% + 2rem); 
+    margin: 1rem -1rem;      
+    height: 15rem;
+    object-fit: cover;
+    padding: 0;
+    border: 2px solid #000000;
+}
+
+.location-and-weather {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    gap: 1rem; 
+}
+
+.location-and-weather input {
+    font-family: "Economica";
+    letter-spacing: 0.5px;
+    width: 22rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #083839;
+    border-radius: 0.5rem;
+    background-color: #637c6f;
+    color: #ced9b4;
+    font-size: 1.1rem;
+}
+
+.location-and-weather input::placeholder {
+    color: #ced9b489;
+}
+
+
+
+/* POST Button */
+.post-button {
+    font-family: "GaretBold";
+    width: 60%;
+    margin: 1rem auto;
+    margin-bottom: 0.5rem;
+    display: block;
+    background-color: #d4dac4;
+    color: #2b4538;
+    border: 2px solid #083839;
+    padding: 0.5rem 1rem;;
+    border-radius: 1rem;
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+
+/* Responsive Design */
+/*@media (max-width: 600px) {
+    main {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    header h1 {
+        font-size: 20px;
+    }
+
+    .post-picture {
+        height: 150px;
+    }
+}*/

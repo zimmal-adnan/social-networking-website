@@ -1,0 +1,179 @@
+@font-face {
+    font-family: "Gill Sans";
+    src: url(../Fonts/Gill_Sans.ttf);
+}
+
+@font-face {
+    font-family: "Garet";
+    src: url(../Fonts/Garet-Book.otf);
+}
+@font-face {
+    font-family: "GaretBold";
+    src: url(../Fonts/Garet-Heavy.otf);
+}
+
+@font-face {
+    font-family: "Economica";
+    src: url(../Fonts/Economica-Regular.ttf);
+}
+
+
+main {
+    display: flex;
+    gap: 1.5rem;
+    padding: 2rem;
+    margin: 0 auto;
+}
+
+
+.map-pin {
+    position: relative;
+    width: 25%;
+    background-color: #749081;
+    border-radius: 1rem;
+    border: 2px solid #083839;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 20rem;
+}
+
+.close-map {
+    position: absolute;
+    top: 50%;            
+    right: -1rem;       
+    transform: translateY(-50%); 
+    background-color: #8ba396;
+    border: 3px solid #083839;
+    color: #083839;
+    border-radius: 0.3rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+.map-pin h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    line-height: 1.5;
+    color: white;
+    font-family: "Garet";
+}
+
+.map-pin img {
+    width: 100%;
+    height: 100%;
+    border-radius: 0 0 1rem 1rem;
+    object-fit: cover;
+}
+
+
+.explore {
+    width: 70%;
+    background-color: #749081;
+    border-radius: 1rem;
+    border: 2px solid #083839;
+    padding: 1rem 1.5rem;
+}
+
+.search-bar {
+    position: relative;
+    margin: 0;
+}
+
+.search-bar input {
+    font-family: "Economica";
+    letter-spacing: 0.5px;
+    width: 100%;
+    padding: 0.5rem 0.8rem;
+    border-radius: 100rem;
+    border: 2px solid #083839;
+    background-color: #3c5c4b;
+    color: #ffffff;
+    font-size: 1.2rem;
+    box-sizing: border-box;
+}
+
+.search-bar input::placeholder {
+    color: #a0a89f;
+}
+
+.search-bar i {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #b6c29a;
+    opacity: 0.8;
+    font-size: 1.2rem;
+}
+
+.search-filter {
+    font-family: "Garet";
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.5rem;
+    color: white;
+    margin-top: -0.5rem;
+    cursor: pointer;
+}
+
+.search-filter h4 {
+    font-weight: normal;
+}
+
+.explore-posts {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap:  0rem 0.8rem;
+    max-height: 40rem;
+    padding-right: 1.5rem;
+    overflow-y: auto;
+}
+
+
+.post-image img.image {
+    height: 15rem; 
+    object-fit: cover;
+}
+
+.explore-posts::-webkit-scrollbar {
+    width: 8px;
+}
+
+.explore-posts::-webkit-scrollbar-thumb {
+    background: #4a6356;
+    border-radius: 10px;
+}
+
+.explore-posts::-webkit-scrollbar-track {
+    background: #88a39598;
+}
+
+.explore-posts::-webkit-scrollbar-thumb:hover {
+    background: #32463c;
+}
+
+
+/*@media (max-width: 1024px) {
+    main {
+        flex-direction: column;
+    }
+    
+    .explore-posts {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .explore-posts {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}*/

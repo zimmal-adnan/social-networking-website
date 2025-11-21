@@ -1,46 +1,48 @@
 @font-face {
     font-family: "Gill Sans";
-    src: url(../Fonts/Gill_Sans.ttf);
+    src: url("../Fonts/Gill_Sans.ttf") format("truetype");
 }
 
 @font-face {
     font-family: "Garet";
-    src: url(../Fonts/Garet-Book.otf);
+    src: url("../Fonts/Garet-Book.otf") format("opentype");
 }
 @font-face {
     font-family: "GaretBold";
-    src: url(../Fonts/Garet-Heavy.otf);
+    src: url("../Fonts/Garet-Heavy.otf") format("opentype");
 }
 
 @font-face {
     font-family: "Economica";
-    src: url(../Fonts/Economica-Regular.ttf);
+    src: url("../Fonts/Economica-Regular.ttf") format("truetype");
 }
 
-* {
+
+#messages-section {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
 
-main {
+.messages-main {
     display: flex;
     height: 100vh;
 
 }
 
 .chat-list {
+    overflow-x: hidden;
     width: 18rem;
     padding: 1.5rem 1rem;
     background-color: #5c836e;
     display: flex;
     flex-direction: column;
-    gap: 15px;
     overflow-y: auto;
 }
 
 .search-friends {
+    box-sizing: border-box;
     font-family: "Economica";
     letter-spacing: 0.5px;
     width: 100%;
@@ -155,6 +157,7 @@ main {
 
 
 .friend-distance {
+    max-height: 4rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -167,16 +170,18 @@ main {
     font-family: "GaretBold";
     font-size: 0.8rem;
     color: #083839;
-    margin: 1rem;          
+    margin: 0.5rem;  
+    position: relative; 
+
 }
 
 .distance-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0rem 1rem;
+    margin: 1.5rem;
     position: relative;
-    top: 0.2rem;
+    top: 0.8rem;
     flex: 1;               
 }
 
@@ -199,12 +204,12 @@ main {
 }
 
 .arrow-hr::before {
-    left: 0rem;
+    left: -0.1rem;
     border-right: 8px solid #4a6b5a;   
 }
 
 .arrow-hr::after {
-    right: 0rem;
+    right: -0.1rem;
     border-left: 8px solid #4a6b5a;    
 }
 
@@ -213,8 +218,8 @@ main {
     font-size: 0.6rem;
     color: #4a6b5a;   
     text-align: center;
-    max-width: 70%;      
-    line-height: 1rem;
+    max-width: 70%;  
+    margin-top: 0.1rem;
 }
 
 

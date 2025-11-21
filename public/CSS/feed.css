@@ -1,23 +1,24 @@
 @font-face {
     font-family: "Gill Sans";
-    src: url(../Fonts/Gill_Sans.ttf);
+    src: url("../Fonts/Gill_Sans.ttf") format("truetype");
 }
 
 @font-face {
     font-family: "Garet";
-    src: url(../Fonts/Garet-Book.otf);
+    src: url("../Fonts/Garet-Book.otf") format("opentype");
 }
 @font-face {
     font-family: "GaretBold";
-    src: url(../Fonts/Garet-Heavy.otf);
+    src: url("../Fonts/Garet-Heavy.otf") format("opentype");
 }
 
 @font-face {
     font-family: "Economica";
-    src: url(../Fonts/Economica-Regular.ttf);
+    src: url("../Fonts/Economica-Regular.ttf") format("truetype");
 }
 
-body{
+
+#feed-section{
     overflow-x: hidden;
     margin: 0;
     background-color: #e0e7cf;
@@ -29,18 +30,23 @@ nav{
     border-bottom: 2px solid white;
     background-color: #3c5c4b;
     display: flex;
-    flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+}
+
+.logo, .nav-links, .app-profile-picture {
+    flex: 1;
+    display: flex;
+    align-items: center;
 }
 
 .logo{
     font-family: "Gill Sans";
+    justify-content: flex-start;
     color: white;
     letter-spacing: 2px;
     font-size: 1rem;
     margin-left: 1rem;
-    margin-top: -2rem;
+    margin-top: 0;
 }
 
 .nav-links{
@@ -50,12 +56,16 @@ nav{
     gap: 4rem;
 }
 
-.profile-picture{
-    border-radius: 100rem;
-    position: relative;
-    height: 2.8rem;
-    width: auto;
-    margin-right: 0.5rem;
+.app-profile-picture{
+    justify-content: flex-end;
+    margin-right: 1rem;
+}
+
+.app-profile-picture-image{
+    height: 2.5rem;      
+    width: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .nav-links i{
@@ -65,7 +75,7 @@ nav{
     border-radius: 100rem;
 }
 
-header{
+#feed-header{
     position: relative;
     display: flex;
     align-items: center;
@@ -78,17 +88,19 @@ header{
     border-bottom: 8px solid white;
 }
 
-header h2{
+#feed-header h2{
     font-size: 1.3rem;
-    font-family: "Garet";
+    font-family: "GaretBold";
     margin: 0;
+    z-index: 1;
 }
 
-header h1{
+#feed-header h1{
     font-size: 4rem;
     font-family: "GaretBold";
     letter-spacing: 10px;
     margin: 0;
+    z-index: 1;
 }
 
 .header-image{
@@ -98,10 +110,10 @@ header h1{
     width: 100%;
     height: 100%;
     object-fit: cover;        
-    z-index: -1;               
+    z-index: 0;               
 }
 
-header h1, header h2 {
+#feed-header h1, #feed-header h2 {
     position: relative;        
     z-index: 1;
 }
@@ -158,11 +170,11 @@ header h1, header h2 {
 }
 
 .post-time{
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     color: #a9a9a9;
     font-family: "Economica";
-    letter-spacing: 1px;
-    margin-right: 0.8rem;
+    letter-spacing: 0.5px;
+    margin-right: 1.4rem;
 }
 
 .image-wrapper{

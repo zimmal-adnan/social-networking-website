@@ -1,34 +1,39 @@
 @font-face {
     font-family: "Gill Sans";
-    src: url(../Fonts/Gill_Sans.ttf);
+    src: url("../Fonts/Gill_Sans.ttf") format("truetype");
 }
 
 @font-face {
     font-family: "Garet";
-    src: url(../Fonts/Garet-Book.otf);
+    src: url("../Fonts/Garet-Book.otf") format("opentype");
 }
 @font-face {
     font-family: "GaretBold";
-    src: url(../Fonts/Garet-Heavy.otf);
+    src: url("../Fonts/Garet-Heavy.otf") format("opentype");
 }
 
 @font-face {
     font-family: "Economica";
-    src: url(../Fonts/Economica-Regular.ttf);
+    src: url("../Fonts/Economica-Regular.ttf") format("truetype");
 }
 
-* {
+
+#create-post-section {
     margin: 0;
-    padding: 0;
+    padding: 1rem 0rem;
     box-sizing: border-box;
+    background-color: #e0e7cf;
 }
 
 .create-post-header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-family: "GaretBold";
     background-color: #083839;
     text-align: center;
-    height: 6rem;
-    margin: 2rem 0;
+    height: 5rem;
+    margin: 1rem 0;
     padding: 1rem 0rem;
     border-bottom: 3px solid white;
     border-top: 3px solid white;
@@ -37,12 +42,12 @@
 .header-title {
     word-spacing: 10px;
     color: white;
-    font-size: 2.5rem;
+    font-size: 2.7rem;
     letter-spacing: 3px;
 }
 
 
-main {
+.create-post-main {
     max-width: 50rem;
     margin: 1rem auto;
     background-color: #8ba396;
@@ -60,7 +65,7 @@ main {
 .caption-input {
     height: 25rem;   
     flex: 0 0 49%;
-    max-width: 49%;
+    max-width: 50%;
 }
 
 .post-input {
@@ -84,7 +89,7 @@ main {
     display: none;
 }
 
-.upload {
+.upload-post {
     margin-top: 0.8rem;
     font-family: "Garet";
     background-color: #3c5c4b;
@@ -101,11 +106,11 @@ main {
     transition: background-color 0.3s;
 }
 
-.upload:hover {
+.upload-post:hover {
     background-color: #4a5d4f;
 }
 
-.upload i {
+.upload-post i {
     font-size: 1rem;
 }
 
@@ -116,6 +121,8 @@ main {
     display: flex;
     flex-direction: column;
     justify-content: space-between; 
+
+    box-sizing: border-box;
 }
 
 .caption-input h2 {
@@ -124,13 +131,14 @@ main {
     color: white;
     font-size: 1rem;
     margin-bottom: 1rem;
+    
 }
 
 .add-caption{
     flex-grow: 1;      
     border: none;
     background-color: #4f665b;
-    width: 100%;
+    width: calc(100% - 1rem); 
     height: 12rem;
     font-family: "Economica";
     font-size: 1rem;
@@ -144,7 +152,7 @@ main {
     margin: 1rem 0;
     margin-bottom: 0rem;
     font-family: "Economica";
-    width: 100%;
+    width: calc(100% - 1rem); 
     padding: 0.5rem;
     border: none;
     border-radius: 0.5rem;
@@ -152,7 +160,7 @@ main {
     background-color: #8ba396;
     font-size: 0.9rem;
     color: black;
-    flex-shrink: 0;
+
 }
 
 .budget-input::placeholder{
@@ -208,8 +216,6 @@ main {
 }
 
 
-
-/* POST Button */
 .post-button {
     font-family: "GaretBold";
     width: 60%;
@@ -226,20 +232,3 @@ main {
     cursor: pointer;
     transition: all 0.3s;
 }
-
-
-/* Responsive Design */
-/*@media (max-width: 600px) {
-    main {
-        margin: 20px;
-        padding: 20px;
-    }
-
-    header h1 {
-        font-size: 20px;
-    }
-
-    .post-picture {
-        height: 150px;
-    }
-}*/

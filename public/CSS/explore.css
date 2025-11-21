@@ -1,24 +1,58 @@
 @font-face {
     font-family: "Gill Sans";
-    src: url(../Fonts/Gill_Sans.ttf);
+    src: url("../Fonts/Gill_Sans.ttf") format("truetype");
 }
 
 @font-face {
     font-family: "Garet";
-    src: url(../Fonts/Garet-Book.otf);
+    src: url("../Fonts/Garet-Book.otf") format("opentype");
 }
 @font-face {
     font-family: "GaretBold";
-    src: url(../Fonts/Garet-Heavy.otf);
+    src: url("../Fonts/Garet-Heavy.otf") format("opentype");
 }
 
 @font-face {
     font-family: "Economica";
-    src: url(../Fonts/Economica-Regular.ttf);
+    src: url("../Fonts/Economica-Regular.ttf") format("truetype");
 }
 
+#explore-section{
+    overflow-x: hidden;
+    margin: 0;
+    background-color: #e0e7cf;
+}
 
-main {
+.explore-header{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    height: 20rem;
+    overflow: hidden;
+    flex-direction: column;
+    border-top: 3px solid white;
+    border-bottom: 8px solid white;
+}
+
+.explore-title{
+    font-family: "GaretBold";
+    color: white;
+    font-size: 4rem;
+}
+
+.trending-posts{
+    color: #083839;
+    font-family: "GaretBold";
+}
+
+.explore-header hr{
+    border: 1px solid #083839;
+    width: 15rem;
+}
+
+.explore-main {
     display: flex;
     gap: 1.5rem;
     padding: 2rem;
@@ -138,10 +172,22 @@ main {
     overflow-y: auto;
 }
 
+.explore-post-image {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+}
 
-.post-image img.image {
+
+.explore-post-image img.image {
     height: 15rem; 
     object-fit: cover;
+    width: 100%;
+    display: block;
+    box-sizing: border-box; 
+    border-left: 0.3rem solid white;
+    border-right: 0.3rem solid white;
 }
 
 .explore-posts::-webkit-scrollbar {
@@ -161,19 +207,3 @@ main {
     background: #32463c;
 }
 
-
-/*@media (max-width: 1024px) {
-    main {
-        flex-direction: column;
-    }
-    
-    .explore-posts {
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    }
-}
-
-@media (max-width: 768px) {
-    .explore-posts {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}*/

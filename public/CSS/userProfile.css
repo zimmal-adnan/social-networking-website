@@ -1,37 +1,35 @@
 @font-face {
     font-family: "Gill Sans";
-    src: url(../Fonts/Gill_Sans.ttf);
+    src: url("../Fonts/Gill_Sans.ttf") format("truetype");
 }
 
 @font-face {
     font-family: "Garet";
-    src: url(../Fonts/Garet-Book.otf);
+    src: url("../Fonts/Garet-Book.otf") format("opentype");
 }
 @font-face {
     font-family: "GaretBold";
-    src: url(../Fonts/Garet-Heavy.otf);
+    src: url("../Fonts/Garet-Heavy.otf") format("opentype");
 }
 
 @font-face {
     font-family: "Economica";
-    src: url(../Fonts/Economica-Regular.ttf);
+    src: url("../Fonts/Economica-Regular.ttf") format("truetype");
 }
 
-* {
+#user-profile-section {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    background-color: #e0e7cf;
 }
 
-
-
-main {
+.user-profile-main {
     max-width: 1000px;
     margin: 0 auto;
     padding: 40px 20px;
 }
 
-/* Profile Header Section */
 .profile{
     border: 3px solid #083839;
     background-color: #8ba396;
@@ -186,7 +184,6 @@ main {
     font-weight: normal;
 }
 
-/* Posts Grid */
 .posts-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;

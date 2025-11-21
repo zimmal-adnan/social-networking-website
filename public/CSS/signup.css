@@ -1,23 +1,24 @@
 @font-face {
     font-family: "Gill Sans";
-    src: url(../Fonts/Gill_Sans.ttf);
+    src: url("../Fonts/Gill_Sans.ttf") format("truetype");
 }
 
 @font-face {
     font-family: "Garet";
-    src: url(../Fonts/Garet-Book.otf);
+    src: url("../Fonts/Garet-Book.otf") format("opentype");
 }
 @font-face {
     font-family: "GaretBold";
-    src: url(../Fonts/Garet-Heavy.otf);
+    src: url("../Fonts/Garet-Book.otf") format("opentype");
 }
 
 @font-face {
     font-family: "Economica";
-    src: url(../Fonts/Economica-Regular.ttf);
+    src: url("../Fonts/Economica-Regular.ttf") format("truetype");
 }
 
-body {
+
+#authentication-section {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -67,14 +68,14 @@ body {
 }
 
 
-body:has(.signup:hover) .login,
-body:has(.signup.locked) .login {
+#authentication-section:has(.signup:hover) .login,
+#authentication-section:has(.signup.locked) .login {
     opacity: 0;
     pointer-events: none;
 }
 
-body:has(.login:hover) .signup,
-body:has(.login.locked) .signup {
+#authentication-section:has(.login:hover) .signup,
+#authentication-section:has(.login.locked) .signup {
     opacity: 0;
     pointer-events: none;
 }
@@ -121,7 +122,7 @@ body:has(.login.locked) .signup {
 .login:hover h1,
 .signup.locked h1,
 .login.locked h1 {
-    margin-top: -2rem;     /* NEW */
+    margin-top: -2rem;     
 }
 
 
@@ -137,7 +138,6 @@ body:has(.login.locked) .signup {
     position: relative;
     top: 1rem;
     bottom: 0.6rem;
-
 }
 
 
@@ -259,6 +259,3 @@ body:has(.login.locked) .signup {
 .form-scroll::-webkit-scrollbar-thumb:hover {
     background: #4a6356;
 }
-
-
-

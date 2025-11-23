@@ -9,14 +9,13 @@
 }
 @font-face {
     font-family: "GaretBold";
-    src: url("../Fonts/Garet-Book.otf") format("opentype");
+    src: url("../Fonts/Garet-Heavy.otf") format("opentype");
 }
 
 @font-face {
     font-family: "Economica";
     src: url("../Fonts/Economica-Regular.ttf") format("truetype");
 }
-
 
 #authentication-section {
     display: flex;
@@ -27,10 +26,11 @@
     flex-direction: column;
     gap: 2rem;
     position: relative;
-    overflow-y: hidden;
+    overflow: hidden;
 }
 
 .signup, .login{
+    position: relative;
     font-family: "GaretBold";
     border: 5px solid #083839;
     color: #083839;
@@ -41,13 +41,33 @@
     flex-direction: column;
     width: 25rem;
     padding: 2rem;
-    background-color: #e0e7cf65;
-    text-align: center;
-    cursor: pointer;      
-    transition: all 0.6s ease;
+    background-color: #e0e7cfd4;
+    text-align: center;     
+    transition: all 0.5s ease;
     height: 7rem; 
-    opacity: 1;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6), inset 0 0 15px 2px rgba(128, 139, 96, 0.6);
 }
+
+
+
+#cancel-signup, #cancel-login {
+    position: absolute;
+    top: 1rem;
+    right: 1.3rem;
+    visibility: hidden;
+    font-size: 1.2rem;
+    color: #083839;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#cancel-signup:hover, #cancel-login:hover{
+    transform: scale(1.2);
+    color: #a04040;
+}
+
 
 .signup:hover, .signup.locked {
     height: 65vh;       
@@ -60,10 +80,12 @@
 }
 
 .login.locked {
+    cursor: default;
     transform: translate(0%, -25%);
 }
 
 .signup.locked{
+    cursor: default;
     transform: translate(0%, 15%);
 }
 
@@ -134,11 +156,25 @@
     letter-spacing: 1px;
     font-size: 1.2rem;
     padding: 0.3rem 1rem;
-    font-family: "GaretBold";
+    font-family: "Garet";
     position: relative;
     top: 1rem;
+    cursor: pointer;
     bottom: 0.6rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
+
+.registration-button:hover {
+    background-color: #4a6b5a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.registration-button:active {
+    transform: translateY(0px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
 
 
 .signup h3, .login h3{
@@ -165,9 +201,12 @@
     top: 8px;
     bottom: 8px;
     width: 1px;
-    background: #000;
+    background: black;
     border-radius: 1px;
+    transition: all 0.3s ease;
 }
+
+
 
 .input-with-line{
     width: 100%;
@@ -180,16 +219,31 @@
     outline: none;
     font-family: "Economica";
     letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.input-with-line:hover {
+    background: rgba(255,255,255,0.8);
+    border-color: #5c836e;
 }
 
 .input-with-line:focus{
-    border: 2px solid black;
+
+    background: #d0e1ad;
+    box-shadow: 0 0 12px rgba(92, 131, 110, 0.3);
 }
 
+
 .link-text{
+    cursor: pointer;
     font-family: "GaretBold";
     font-size: 0.8rem;
     color: #5d7a19;
+    transition: all 0.3s ease;
+}
+
+.link-text:hover {
+    color: #3e5410;
 }
 
 .profile-input-field{
@@ -206,18 +260,13 @@
     height: 5.5rem;
     border-radius: 100rem;
     object-fit: cover;
-    border: 3px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid #083839;
     transition: all 0.4s ease;
-    cursor: pointer;
     position: relative;
     flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.profile-picture:hover {
-    transform: scale(1.05);
-    border-color: white;
-    box-shadow: 0 6px 25px rgba(255, 255, 255, 0.3), inset 0 0 30px rgba(255, 255, 255, 0.1);
-}
 
 #input-file {
     display: none;
@@ -232,8 +281,20 @@
     border-radius: 8px;
     margin-bottom: 1rem;
     background-color: #8ba396;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
+.upload:hover {
+    background-color: #6f8d7d;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.upload:active {
+    transition: 0.2s ease;
+    transform: translateY(0px);
+}
 
 .form-scroll {
     margin-left: 1rem;
@@ -259,3 +320,61 @@
 .form-scroll::-webkit-scrollbar-thumb:hover {
     background: #4a6356;
 }
+
+.background-slideshow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1; 
+}
+
+.background-slideshow .first-image,
+.background-slideshow .second-image,
+.background-slideshow .third-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.background-slideshow .slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+}
+
+.background-slideshow .slide.active {
+    opacity: 1;
+}
+
+.location-name {
+    position: absolute;  
+    bottom: 0;
+    left: 0;        
+    color: black;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 0.6rem 1.8rem;
+    border-radius: 0 20px 0 0;
+    font-family: "Garet";
+    font-size: 0.8rem;
+    opacity: 0;
+    transition: all 1s ease-in-out;
+    margin: 0;
+}
+
+.first-image .location-name.active,
+.second-image .location-name.active,
+.third-image .location-name.active {
+    opacity: 1;
+}
+
+

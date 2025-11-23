@@ -22,16 +22,16 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    max-height: 100vh;
 }
 
 
 .messages-main {
     display: flex;
-    height: 100vh;
-
 }
 
 .chat-list {
+    height: 36.2rem;
     overflow-x: hidden;
     width: 18rem;
     padding: 1.5rem 1rem;
@@ -52,10 +52,17 @@
     background-color: #8ba396;
     color: black;
     font-size: 1rem;
+    transition: all 0.5s ease;
 }
 
 .search-friends::placeholder {
     color: rgba(0, 0, 0, 0.4);
+}
+
+.search-friends:focus {
+    outline: none;
+    background-color: #a7baaf;
+    border: 2px solid #3c5c4b;
 }
 
 .search-filter {
@@ -85,7 +92,7 @@
 
 .friends {
     width: 100%;
-    background-color: #89b29c;
+    background-color: #7ea691;;
     padding: 0.7rem 1rem;
     display: flex;
     align-items: center;
@@ -93,10 +100,27 @@
     cursor: pointer;
     transition: background-color 0.6s ease;
     position: relative;
+    transition: all 0.3s ease;
 }
 
 .friends:hover {
     background-color: #3c5c4b;
+    transform: translateX(6px);
+}
+
+.friends::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 4px;
+    height: 0;
+    background: #e0e7cf;
+    transform: translateY(-50%);
+}
+
+.friends:hover::after {
+    height: 4.3rem;
 }
 
 .friends img {
@@ -106,7 +130,10 @@
     object-fit: cover;
 }
 
+
 .friends .username {
+    position: relative;
+    top: 0rem;
     font-size: 0.85rem;
     font-family: "GaretBold";
     letter-spacing: 1px;
@@ -118,13 +145,16 @@
     font-size: 0.5rem;
     font-family: "Garet";
     color: rgba(255, 255, 255, 0.6);
-    margin-top: 0.1rem;
+    position: relative;
+    top: 0;
+    margin: 0;
     font-weight: normal;
 }
 
 
 .message-box {
     flex: 1;
+    height: 38.7rem;
     border: 4px solid #083839;
     border-radius: 1.5rem;
     display: flex;
@@ -157,7 +187,7 @@
 
 
 .friend-distance {
-    max-height: 4rem;
+    height: 3rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -168,7 +198,7 @@
 
 .friend-distance h3 {
     font-family: "GaretBold";
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: #083839;
     margin: 0.5rem;  
     position: relative; 
@@ -201,6 +231,7 @@
     height: 0;
     border-top: 5px solid transparent;
     border-bottom: 5px solid transparent;
+    
 }
 
 .arrow-hr::before {
@@ -231,6 +262,7 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    scroll-behavior: smooth;
 }
 
 .message {
@@ -270,10 +302,28 @@
     font-size: 1rem;
     color: #000000;
     line-height: 1.5;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
 }
 
 .message.sent .message-bubble {
     background-color: #b8ccb8;
+}
+
+.message.new-message {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .message-time {
@@ -282,43 +332,93 @@
     margin-top: 0.2rem;
     padding: 0 0.3rem;
     font-family: "Garet";
-
 }
 
-
 .message-input {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 0.8rem;
+    justify-content: center;
     padding: 0.8rem 1.3rem;
     background-color: #d4dfd4;
     border-radius: 0 0 1.5rem 1.5rem;
 }
 
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.send-message-button{
+    position: absolute;
+    right: 6.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: 3.5rem;
+    height: 2.3rem;
+
+    background: #8ba396;
+    color: #083839;
+    border: none;
+    border-radius: 10rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.send-message-button:hover {
+    background: #749081;
+    color: #000000;
+}
+
+
+
 .add-message {
+    margin-right: 0.5rem;
     font-family: "Economica";
     letter-spacing: 0.5px;
     color: black;
     flex: 1;
+    padding-right: 4rem;
     padding: 0.8rem 1rem;
     border: 2px solid #083839; 
     border-radius: 100rem;
-    background-color: white;
+    background-color: rgb(245, 245, 245);
     font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.add-message:focus {
+    outline: none;
+    border-color: #a7beb2;
+    background-color: white;
+    box-shadow: 0 0 0 5px rgba(224, 231, 207, 0.3);
 }
 
 .add-message::placeholder {
     color: #00000078;
 }
 
-.message-input i {
+.message-icons{
+    display: flex;
+    gap: 0.6rem;
+    
+}
+.message-icons i {
     font-size: 1.5rem;
     color: #083839; 
     cursor: pointer;
-    transition: color 0.3s;
+    transition: all 0.3s ease;
 }
 
-.message-input i:hover {
+.message-icons i:hover {
     color: #698873;
 }
 
@@ -338,4 +438,9 @@
 
 .chat-messages::-webkit-scrollbar-thumb:hover {
     background: #4a6356;
+}
+
+.add-message:placeholder-shown ~ .send-message-button {
+    opacity: 0.5;
+    pointer-events: none;
 }

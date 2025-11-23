@@ -21,16 +21,30 @@
 #feed-section{
     overflow-x: hidden;
     margin: 0;
+    padding: 0.25rem;
     background-color: #e0e7cf;
 }
+
 
 nav{
     height: 4rem;
     width: 100%;
-    border-bottom: 2px solid white;
+    border-bottom: 4px solid white;
     background-color: #3c5c4b;
     display: flex;
     align-items: center;
+    animation: slideDown 0.6s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .logo, .nav-links, .app-profile-picture {
@@ -64,53 +78,71 @@ nav{
 .app-profile-picture-image{
     height: 2.5rem;      
     width: 2.5rem;
-    border-radius: 50%;
+    border-radius: 100rem;
     object-fit: cover;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 3px solid transparent;
 }
+
+.app-profile-picture-image:hover {
+    border: 3px solid #083839; 
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
 
 .nav-links i{
     padding: 0.3rem;
     transform: scale(1.8);
     background-color: #5c836e77;
     border-radius: 100rem;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.nav-links i:hover {
+    background-color: #5c836e;
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1);
+}
+
+.nav-links i:active {
+    transform: scale(1.7);
+}
+
+#feed-section {
+    margin: 0;
+    padding: 1.3rem 0rem;
+    box-sizing: border-box;
+    background-color: #e0e7cf;
 }
 
 #feed-header{
-    position: relative;
+    background: #083839;
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
     display: flex;
+    padding: 0.3rem 0;
     align-items: center;
     justify-content: center;
-    color: white;
-    height: 20rem;
-    overflow: hidden;
     flex-direction: column;
-    border-top: 3px solid white;
-    border-bottom: 8px solid white;
 }
 
 #feed-header h2{
-    font-size: 1.3rem;
-    font-family: "GaretBold";
+    color: white;
+    font-size: 0.8rem;
+    font-family: "Garet";
     margin: 0;
     z-index: 1;
+    margin-bottom: 0.4rem;
 }
 
 #feed-header h1{
-    font-size: 4rem;
+    color: white;
+    font-size: 2.5rem;
     font-family: "GaretBold";
-    letter-spacing: 10px;
+    letter-spacing: 3px;
     margin: 0;
     z-index: 1;
-}
-
-.header-image{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;        
-    z-index: 0;               
 }
 
 #feed-header h1, #feed-header h2 {
@@ -118,13 +150,48 @@ nav{
     z-index: 1;
 }
 
+.feed-posts {
+    overflow-y: auto;
+    max-height: 72vh;
+}
+
 .post {
     display: flex;
     align-items: flex-start;
     gap: 1.5rem;   
     max-width: 60rem;
-    margin: 2rem auto;
+    margin: 0rem auto;
+    animation: fadeInUp 0.6s ease-out;
 }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.feed-posts::-webkit-scrollbar {
+    width: 8px;
+}
+
+.feed-posts::-webkit-scrollbar-thumb {
+    background: #5c836e;
+    border-radius: 10px;
+}
+
+.feed-posts::-webkit-scrollbar-track {
+    background: #88a39598;
+}
+
+.feed-posts::-webkit-scrollbar-thumb:hover {
+    background: #4a6356;
+}
+
 
 .user-post{
     flex: 1;
@@ -161,14 +228,23 @@ nav{
     align-items: center;
 }
 
+
+
 .post-profile-picture {
     width: 2rem;
     height: 2rem;
     border-radius: 100rem;
     margin-right: 0.5rem;
     margin-left: 0.7rem;
+    transition: all 0.3s ease;
+    border: 2px solid transparent; 
+    cursor: pointer;
 }
 
+.post-profile-picture:hover{
+    border: 2px solid #083839; 
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
 .post-time{
     font-size: 0.8rem;
     color: #a9a9a9;
@@ -184,7 +260,7 @@ nav{
 
 .post-image .image {
     width: 100%;
-    height: auto;
+    height: 18rem;
     object-fit: cover;
     display: block;
     box-sizing: border-box; 
@@ -198,11 +274,21 @@ nav{
     bottom: 0.6rem;   
     z-index: 2;   
     background-color: rgba(215, 215, 215, 0.3);
-    padding: 0.2rem 0.5rem;
+    padding: 0.3rem 0.6rem;
     font-size: 1rem;
     display: flex;
     gap: 0.5rem;
     border-radius: 10rem;
+    transition: all 0.3s ease;
+}
+
+.react span{
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.react span:hover{
+    transform: scale(1.2);
 }
 
 .bottom-section {
@@ -267,9 +353,6 @@ nav{
     margin: 0.5rem 0 0;
 }
 
-
-
-
 .post-description {
     position: relative;
     border: 3px solid #083839; 
@@ -277,9 +360,9 @@ nav{
     border-radius: 1.5rem;
     margin: 2rem auto;
     max-width: 22rem;
-    max-height: 30rem;
+    height: 25rem;
+    padding-top: 1rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
 }
 
 .triangle {
@@ -296,7 +379,7 @@ nav{
 
 .post-caption{
     box-sizing: border-box;
-    max-height: 14rem;   
+    max-height: 13rem;   
     overflow-y: auto;    
     overflow-x: hidden;
 }
@@ -319,7 +402,7 @@ nav{
 }
 
 .post-caption-wrapper {
-    padding: 1rem 2rem;
+    padding: 0rem 2rem;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -362,8 +445,7 @@ nav{
     text-align: center;
     font-size: 1.5rem;
     color: #2d3e2d;
-    margin-top: 0.7rem;
-    margin-bottom: 0.7rem;
+    margin: 0.4rem 0rem;
     letter-spacing: 3px;
 }
 
@@ -392,14 +474,12 @@ nav{
     background: #4a6356;
 }
 
-
-
 .comment-wrapper {
     background-color: #ced9b4;
-    padding: 1rem 1.5rem;
+    padding: 0.7rem 1.5rem;
     width: 100%;
     box-sizing: border-box;
-    
+    transition: all 0.3s ease;
 }
 
 .comment-user-description {
@@ -415,6 +495,14 @@ nav{
     height: 2rem;
     border-radius: 100rem;
     object-fit: cover;
+    transition: all 0.4s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.comment-user-description img:hover {
+    border: 1px solid #083839;
+    box-shadow: 0 0 5px rgba(60, 92, 75, 0.5);
 }
 
 .comment-user-text {
@@ -462,11 +550,11 @@ nav{
     color: #5a6b5a;
     font-size: 1rem;
     cursor: pointer;
-    transition: color 0.2s;
+    transition: all 0.2s ease;
 }
 
 .comment-interaction i:hover {
-    color: #2d3e2d;
+    color: #233123;
 }
 
 .add-comment {
@@ -475,8 +563,13 @@ nav{
     border: 2px solid #083839;
     background-color: rgba(255, 255, 255, 0.4);
     border-radius: 1.5rem;
-    padding: 0.7rem 1rem;
+    padding: 0.5rem 1rem;
     margin: 0.4rem;
+    transition: all 0.3s ease;
+}
+
+.add-comment:focus-within {
+    background-color: rgba(255, 255, 255, 0.7);
 }
 
 .post-comment {
@@ -485,7 +578,7 @@ nav{
     border: none;
     color: #2d3e2d;
     font-family: "Economica";
-    font-size: 0.9rem;
+    font-size: 1rem;
     outline: none;
     letter-spacing: 0.5px;
 }
@@ -496,21 +589,43 @@ nav{
 
 .add-comment-actions {
     display: flex;
-    gap: 0.6rem;
+    gap: 0.5rem;
 }
 
-.add-comment-btn {
+.add-comment-element {
     background: none;
     border: none;
     color: #5a6b5a;
     cursor: pointer;
     font-size: 1rem;
     padding: 0;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
 }
 
-.add-comment-btn:hover {
-    color: #2d3e2d;
+.add-comment-element:hover {
+    color: #233123;
+}
+
+.add-comment-button{
+    background: #5a6b5a;
+    border: none;
+    border-radius: 100rem;
+    color: white;
+    cursor: pointer;
+    font-size: 0.7rem;
+    padding: 0.3rem 0.8rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center; 
+}
+
+.add-comment-button:hover{
+    background: #233123;
+}
+
+.add-comment:has(.post-comment:placeholder-shown) .add-comment-button {
+    opacity: 0.5;
+    pointer-events: none;
 }

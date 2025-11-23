@@ -32,8 +32,7 @@
     font-family: "GaretBold";
     background-color: #083839;
     text-align: center;
-    height: 5rem;
-    margin: 1rem 0;
+    height: 2rem;
     padding: 1rem 0rem;
     border-bottom: 3px solid white;
     border-top: 3px solid white;
@@ -42,10 +41,9 @@
 .header-title {
     word-spacing: 10px;
     color: white;
-    font-size: 2.7rem;
+    font-size: 2.5rem;
     letter-spacing: 3px;
 }
-
 
 .create-post-main {
     max-width: 50rem;
@@ -103,17 +101,21 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    transition: background-color 0.3s;
+    transition: 0.3s ease;
 }
 
 .upload-post:hover {
     background-color: #4a5d4f;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
 
 .upload-post i {
     font-size: 1rem;
 }
 
+.upload-post:active {
+    box-shadow: inset 0 0px 5px 1px rgba(0,0,0,0.2);
+}
 
 .caption-input {
     background-color: #637c6f;
@@ -121,8 +123,9 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between; 
-
+    border: 3px solid #485f53;
     box-sizing: border-box;
+    border-radius: 0.3rem;
 }
 
 .caption-input h2 {
@@ -131,21 +134,35 @@
     color: white;
     font-size: 1rem;
     margin-bottom: 1rem;
+    margin-top: 0rem;
     
 }
 
 .add-caption{
     flex-grow: 1;      
-    border: none;
     background-color: #4f665b;
     width: calc(100% - 1rem); 
-    height: 12rem;
     font-family: "Economica";
     font-size: 1rem;
-    color: white;
+    color: #ced9b4;
     padding: 0.5rem;
     resize: none;    
     border-radius: 0.3rem;
+    transition: all 0.3s ease;
+    outline: none;
+    border: 1px solid transparent;
+}
+
+.add-caption:focus {
+    outline: none;
+    background-color: #51685c;
+    border: 1px solid #083839;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+
+}
+
+.add-caption::placeholder{
+    color: rgba(255, 255, 255, 0.4);
 }
 
 .budget-input {
@@ -160,7 +177,16 @@
     background-color: #8ba396;
     font-size: 0.9rem;
     color: black;
+    transition: all 0.3s ease;
 
+}
+
+.budget-input:focus {
+    border: 1px solid #083839;
+    outline: none;
+    background-color: #9db4a8;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    
 }
 
 .budget-input::placeholder{
@@ -209,6 +235,14 @@
     background-color: #637c6f;
     color: #ced9b4;
     font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.location-and-weather input:focus {
+    outline: none;
+    background-color: #748d80;
+    border: 1px solid #083839;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
 }
 
 .location-and-weather input::placeholder {
@@ -222,7 +256,7 @@
     margin: 1rem auto;
     margin-bottom: 0.5rem;
     display: block;
-    background-color: #d4dac4;
+    background-color: #e0e7cf;
     color: #2b4538;
     border: 2px solid #083839;
     padding: 0.5rem 1rem;;
@@ -232,3 +266,12 @@
     cursor: pointer;
     transition: all 0.3s;
 }
+
+.post-button:hover {
+    background-color: #eaeee1;
+    box-shadow: 0 0 6px 2px rgba(0,0,0,0.2);
+}
+.post-button:active{
+    box-shadow: inset 0 0 6px 2px rgba(0,0,0,0.2);
+}
+

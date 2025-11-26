@@ -25,18 +25,19 @@
 }
 
 .user-profile-main {
-    max-width: 1000px;
+    max-width: 60rem;
     margin: 0 auto;
-    padding: 40px 20px;
+    padding: 2rem 1rem;
 }
 
 .profile{
     border: 3px solid #083839;
     background-color: #8ba396;
     border-radius: 1rem;
-    padding: 1.5rem;
+    height: 15rem;
+    padding: 0.5rem 2rem;
     margin-bottom: 1rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    flex-grow: 1;
 }
 
 .user-profile {
@@ -47,26 +48,29 @@
 }
 
 .profile-image {
-    width: 10rem;
-    height: 10rem;
-    border-radius: 50%;
+    margin-top: 1rem;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 100rem;
     object-fit: cover;
-    border: 5px solid #ffffff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border: 2px solid #083839;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer;
+
 }
 
-.profile-details {
-    margin-top: 1rem;
-    flex: 1;
+.profile-image:hover {
+    border-color: #b6c29a;
 }
 
 .username {
     font-family: "GaretBold";
     color: #083839;
-    font-size: 1.7rem;
+    font-size: 1.5rem;
     margin-bottom: 0.5rem;
 }
-
 
 .profile-numbers {
     display: flex;
@@ -90,72 +94,79 @@
 .stat-label {
     font-family: "Garet";
     color: #3d5549;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
 }
 
-/* Action Buttons */
 .action-buttons {
     display: flex;
     gap: 1rem;
 }
 
-.follow-btn,
-.message-btn {
+.follow-button,
+.message-button {
     padding: 0.5rem 1.5rem;
     border-radius: 0.6rem;
-    font-size: 1rem;
+    font-size: 0.8rem;
     font-family: "Garet";
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
 }
 
-.follow-btn {
+.follow-button {
     border: 1px solid #e0e7cf;
-    background-color: #3d5549;
+    background-color: #3c5c4b;
     color: white;
 }
 
-.follow-btn:hover {
+.follow-button:hover {
     background-color: #2b4538;
-    transform: translateY(-2px);
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.2);
 }
 
-.message-btn {
+.follow-button:active{
+    box-shadow: inset 0 0 5px 2px rgba(0, 0, 0, 0.2);
+}
+
+.message-button {
     border: 1px solid #3d5549;
     background-color: #e0e7cf;
     color: #3d5549;
 }
 
-.message-btn:hover {
-    background-color: #c4cab4;
-    transform: translateY(-2px);
+.message-button:hover {
+    background-color: #ced9b4;
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.2);
 }
 
-/* Bio Section */
-.bio {
+.message-button:active{
+    box-shadow: inset 0 0 5px 1px rgba(0, 0, 0, 0.2);
+}
+
+.user-bio {
     font-family: "Economica";
-    color: #083839;
+    color: #052a2b;
     margin-top: 2rem;
 }
 
-.bio p {
-    font-size: 1.2rem;
+.user-bio p {
+    font-size: 1rem;
+    line-height: 0.4rem;
 }
 
 
-/* Posts Section */
 .posts-section {
     border: 3px solid #8ba396;
     background-color: #3d5549;
     border-radius: 1rem;
-    padding: 2rem 1.5rem;
+    padding: 1rem 1.5rem;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
 .section-header {
+    height: 3rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -196,7 +207,7 @@
     padding: 1rem 0.3rem;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: all 0.3s ease;
 }
 
 .post-item:hover {
@@ -224,7 +235,7 @@
 }
 
 .post-caption{
-    margin-top: 0.4rem;
+    margin-top: -0.6rem;
     font-family: "Garet";
     font-size: 0.6rem;
     padding: 0 0.3rem;
@@ -239,5 +250,4 @@
     font-family: "Economica";
     letter-spacing: 0.5px;
     color: #a9a9a9;
-
 }

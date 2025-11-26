@@ -70,6 +70,13 @@ nav{
     gap: 4rem;
 }
 
+.nav-username{
+    color: white;
+    font-family: "Garet";
+    font-size: 1rem;
+    margin-right: 0.5rem;
+    transition: all 0.3s ease;
+}
 .app-profile-picture{
     justify-content: flex-end;
     margin-right: 1rem;
@@ -81,7 +88,7 @@ nav{
     border-radius: 100rem;
     object-fit: cover;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.5s ease;
     border: 3px solid transparent;
 }
 
@@ -89,6 +96,104 @@ nav{
     border: 3px solid #083839; 
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
 }
+
+.app-profile-picture:hover .log-out {
+    visibility: visible;
+    transform: translateX(-1rem); 
+}
+
+.app-profile-picture:hover .app-profile-picture-image,
+.app-profile-picture:hover .nav-username{
+    transform: translateX(-1.5rem); 
+}
+
+.log-out{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    color: white;
+    font-family: 'norwester';
+    border: none;
+    width: 1rem;
+    opacity: 0;
+    height: 1rem;
+    visibility: hidden; /*Hide until username/profile picture is hovered over*/
+    transition: all 0.4s ease;
+    position: absolute;
+    right: 0;
+    z-index: 100;
+    cursor: pointer;
+    transform: translateX(1rem); 
+}
+
+.log-out:hover{
+    filter: drop-shadow(0 0 2px white);
+    font-size: 1.1rem;
+}
+
+.logout-dropdown{
+    position: absolute;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    top: 4rem;
+    right: 0.5rem;
+    background-color: rgb(255, 255, 255);
+    width: 5rem;
+    padding: 0.5rem;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease;
+    z-index: 200;    
+    box-shadow: 0px 0px 8px 5px rgba(84, 84, 84, 0.3);
+}
+
+.logout-dropdown:before {
+    content: "";
+    position: absolute;
+    top: -0.8rem;
+    right: 0.1rem;
+    transform: rotate(90deg);
+    width: 0;
+    height: 0;
+    border-top: 13px solid transparent;
+    border-right: 26px solid rgb(255, 255, 255);
+    border-bottom: 13px solid transparent;
+}
+
+.logout-dropdown hr{
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0.2rem auto;
+}
+
+.dropdown-button{
+    background: transparent;
+    font-family: "Garet";
+    text-align: left;
+    border: none;
+    font-size: 1rem;
+    position: relative;
+    width: 100%;
+    transition: all 0.5s ease;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.dropdown-button:hover{
+    background-color: rgb(229, 229, 229);
+}
+
+
 
 
 .nav-links i{

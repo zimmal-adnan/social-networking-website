@@ -1,80 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const star = document.getElementById("shooting-star");
-
-    function shootingStar() {
-        const startTop = Math.random() * 10;
-        const startLeft = Math.random() * 250 - 150;
-        const duration = Math.random() * 2 + 1;
-        const delay = Math.random() * 1000 + 1000;
-
-        star.style.top = `${startTop}%`;
-        star.style.left = `${startLeft}vw`;
-        star.style.opacity = 1;
-        star.style.rotate = "315deg";
-
-        star.style.transition = `transform ${duration}s linear, opacity 0.5s`;
-        star.style.transform = "translateX(-80vw)";
-
-        setTimeout(() => {
-            star.style.opacity = 0;
-        }, duration * 800 * 0.8);
-
-        setTimeout(() => {
-            star.style.transition = "none";
-            star.style.transform = "translateX(0)";
-            star.style.opacity = 0;
-
-            setTimeout(shootingStar, delay);
-        }, duration * 1000 + 50);
-    }
-
-    setTimeout(shootingStar, 1000);
-});
-
-
-
-const login = document.getElementById('login');
-const signup = document.getElementById('signup');
-
-let lockedSection = null;
-
-function lockSection(section) {
-    login.classList.remove('locked');
-    signup.classList.remove('locked');
-    section.classList.add('locked');
-    lockedSection = section;
-}
-
-login.addEventListener('click', (e) => {
-    if (lockedSection && lockedSection !== login) return;
-    
-    if (lockedSection !== signup) {
-        lockSection(login);
-    }
-});
-
-signup.addEventListener('click', (e) => {
-    if (lockedSection && lockedSection !== signup) return;
-
-    if (lockedSection !== login) {
-        lockSection(signup);
-    }
-});
-
-document.addEventListener('click', (e) => {
-    if (e.target.tagName === 'A') {
-        e.preventDefault();
-        const linkText = e.target.textContent.trim();
-        
-        if (linkText === 'LOGIN') {
-            lockSection(login);
-        } else if (linkText === 'SIGNUP') {
-            lockSection(signup);
-        }
-    }
-});
-
-
+const wrongSection = document.getElementById("wrong-page-section");
 const homeSection = document.getElementById("home-section");
 const authSection = document.getElementById("authentication-section");
 const mainAppSection = document.getElementById("mainApp-section");
@@ -86,18 +10,12 @@ const travelPlannerSection = document.getElementById("travel-planner-section");
 const userProfileSection = document.getElementById("user-profile-section");
 
 const toLoginButton = document.getElementById("to-login");
-const loginButton = document.getElementById("registration-button");
 
 const loginDiv = document.getElementById("login");
 const signupDiv = document.getElementById("signup");
 
-const navFeed = document.getElementById("nav-feed");
-const navExplore = document.getElementById("nav-explore");
-const navFeedExplore = document.getElementById("nav-feed-explore");
-const navExploreExplore = document.getElementById("nav-explore-explore");
-
-
 function hideAllSections() {
+    wrongSection.style.display = "none";
     homeSection.style.display = "none";
     authSection.style.display = "none";
     mainAppSection.style.display = "none";
@@ -107,6 +25,11 @@ function hideAllSections() {
     messageSection.style.display = "none";
     travelPlannerSection.style.display = "none";
     userProfileSection.style.display = "none";
+}
+
+function showWrongPage(){
+    hideAllSections();
+    wrongSection.style.display = "flex";
 }
 
 function showHome() {
@@ -158,7 +81,7 @@ function showUserProfile(){
 function handleRoute() {
     const path = window.location.pathname;
 
-    if (path.endsWith("/login")) showAuthentication("login");
+    if (path.endsWith("/authentication")) showAuthentication("login");
     else if (path.endsWith("/signup")) showAuthentication("signup");
     else if (path.endsWith("/feed")) showFeed();
     else if (path.endsWith("/explore")) showExplore();
@@ -167,6 +90,7 @@ function handleRoute() {
     else if (path.endsWith("/travelPlanner")) showTravelPlanner();
     else if (path.endsWith("/userProfile")) showUserProfile();
     else if (path.endsWith("/")) showHome();
+    else showWrongPage();
 }
 
 handleRoute();
@@ -174,11 +98,46 @@ window.addEventListener("popstate", handleRoute);
 
 toLoginButton.addEventListener("click", () => {
     showAuthentication("login");
-    history.pushState({}, "", "/M00988347/login");
+    history.pushState({}, "", "/M00988347/authentication");
 });
 
-loginButton.addEventListener("click", () => {
+
+
+
+
+const navMessages = document.getElementById("nav-messages");
+const navFeed = document.getElementById("nav-feed");
+const navCreate = document.getElementById("nav-create");
+const navExplore = document.getElementById("nav-explore");
+const navPlanner = document.getElementById("nav-planner");
+const appProfilePicture = document.getElementById("nav-profile");
+
+navMessages.addEventListener("click", () => {
+    showMessages();
+    history.pushState({}, "", "/M00988347/message");
+});
+
+navFeed.addEventListener("click", () => {
     showFeed();
     history.pushState({}, "", "/M00988347/feed");
 });
+
+navCreate.addEventListener("click", () => {
+    showCreatePost();
+    history.pushState({}, "", "/M00988347/createPost");
+});
+
+navExplore.addEventListener("click", () => {
+    showExplore();
+    history.pushState({}, "", "/M00988347/explore");
+});
+
+navPlanner.addEventListener("click", () => {
+    showTravelPlanner();
+    history.pushState({}, "", "/M00988347/travelPlanner");
+});
+
+
+
+
 

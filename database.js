@@ -9,7 +9,7 @@ export async function connectToDatabase() {
     if (!database) {
         await client.connect();
         database = client.db("trailblaze");   
-        console.log("Connected to MongoDB Atlas");
+        console.log("Connected to MongoDB");
     }
     return database;
 }

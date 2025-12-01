@@ -14,6 +14,9 @@ const toLoginButton = document.getElementById("to-login");
 const loginDiv = document.getElementById("login");
 const signupDiv = document.getElementById("signup");
 
+const actionButtons = document.getElementById("action-buttons");
+const editProfile = document.getElementById("edit-profile");
+
 function hideAllSections() {
     wrongSection.style.display = "none";
     homeSection.style.display = "none";
@@ -100,9 +103,6 @@ toLoginButton.addEventListener("click", () => {
     showAuthentication("login");
     history.pushState({}, "", "/M00988347/authentication");
 });
-
-
-
 
 
 const navMessages = document.getElementById("nav-messages");

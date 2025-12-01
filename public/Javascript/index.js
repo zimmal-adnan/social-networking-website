@@ -32,24 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-const closeMapButton = document.getElementById("close-map");
-const mapBox = document.getElementById("map-pin");
-const exploreBox = document.getElementById("explore");
-const mapBoxHeading = document.getElementById("map-pin-h2");
 
-let mapOpen = true;
-
-closeMapButton.addEventListener("click", () => {
-    if (mapOpen) {
-        mapBox.classList.add("hidden");
-        mapBoxHeading.style.opacity = "0";
-        closeMapButton.innerHTML = '<i class="fa-solid fa-angle-right"></i>'; 
-    } else {
-        mapBox.classList.remove("hidden");
-        mapBoxHeading.style.opacity = "1";
-        closeMapButton.innerHTML = '<i class="fa-solid fa-angle-left"></i>'; 
-    }
-    mapOpen = !mapOpen;
-});
 
 

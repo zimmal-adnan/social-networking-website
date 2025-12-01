@@ -219,3 +219,39 @@
     background: #32463c;
 }
 
+.user-usernames{
+    display: flex;
+    align-items: center;
+    background: #8ba396;
+    padding: 0.3rem 1rem;
+    margin: 0.5rem 0;
+    border-radius: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.user-usernames:hover{
+    background: #94aa9e;
+}
+
+.explore-profile{
+    width: 3rem;
+    height: 3rem;
+    border-radius: 100rem;
+    object-fit: cover;
+}
+
+.explore-username{
+    margin-left: 0.5rem;
+    color: white;
+    font-family: "GaretBold";
+}
+
+.no-results{
+    grid-column: 1 / -1;                 
+    font-family: "GaretBold";
+    color: #9fb6a9;
+    font-size: 2.5rem;
+    margin-left: 2rem;
+    text-align: center; 
+}

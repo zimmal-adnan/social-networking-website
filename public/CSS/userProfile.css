@@ -17,6 +17,10 @@
     src: url("../Fonts/Economica-Regular.ttf") format("truetype");
 }
 
+body{
+    background-color: #e0e7cf;
+}
+
 #user-profile-section {
     margin: 0;
     padding: 0;
@@ -98,12 +102,12 @@
 }
 
 .action-buttons {
-    display: flex;
     gap: 1rem;
 }
 
 .follow-button,
-.message-button {
+.message-button,
+.edit-profile-button {
     padding: 0.5rem 1.5rem;
     border-radius: 0.6rem;
     font-size: 0.8rem;
@@ -113,6 +117,25 @@
     align-items: center;
     gap: 0.5rem;
     transition: all 0.3s ease;
+}
+
+.edit-profile-button{
+    position: relative;
+    top: -0.2rem;
+    background-color: #637c6f;
+    color: #083839;
+    border: 1px solid #083839;
+    width: 100%;
+    justify-content: center;
+}
+
+.edit-profile-button:hover{
+    background-color: #6f867b;
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.2);
+}
+
+.edit-profile-button:active{
+    box-shadow: inset 0 0 5px 1px rgba(0, 0, 0, 0.1);
 }
 
 .follow-button {
@@ -196,10 +219,16 @@
 }
 
 .posts-grid {
+    overflow-y: auto;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 1rem;
+    min-height: 50vh;                   
+    align-content: center;               
+    justify-content: center;             
 }
+
+
 .post-item {
     max-height: 25rem;
     min-height: 20rem;
@@ -250,4 +279,12 @@
     font-family: "Economica";
     letter-spacing: 0.5px;
     color: #a9a9a9;
+}
+
+.no-posts{
+    grid-column: 1 / -1;                 
+    font-family: "GaretBold";
+    color: #8ba396;
+    font-size: 2.5rem;
+    text-align: center; 
 }

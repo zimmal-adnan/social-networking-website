@@ -64,64 +64,7 @@ app.post("/M00988347/users", async (request, response) => {
     request.session.user = {username}; 
 
     response.json({success: true, username, message: "Registration successful"});
-})
-
-
-//uploading profile picture
-app.post("/M00988347/uploadProfilePicture", upload.single('profilePicture'), async (request, response) => {
-    const {username} = request.body;
-
-    if (!request.file) {
-        return response.json({ success: false, message: "No file uploaded" });
-    }
-
-    const filePath = "/M00988347/uploads/" + request.file.filename;
-    
-    const db = await connectToDatabase();
-    const users = db.collection("users");
-        
-    await users.updateOne(
-        {username},
-        {$set: { profilePicture: filePath }}
-    );
-    
-    response.json({success: true, filePath, message: "Profile picture uploaded"});
-})
-
-//associating username with profile picture 
-app.get("/M00988347/profile/:username", async (request, response) => {
-    const {username} = request.params;
-
-    const db = await connectToDatabase();
-    const users = db.collection("users");
-
-    const user = await users.findOne({username});
-    
-    response.json({ 
-        success: true, 
-        username: user.username,
-        email: user.email,
-        profilePicture: user.profilePicture || '/M00988347/Images/profile.jpg'
-    });
 });
-
-//searching for users
-app.get("/M00988347/users", async (request, response) => {
-    const queryUser = request.query.q || "";
-
-    const db = await connectToDatabase();
-    const users = db.collection("users");
-
-    const results = await users.find({username: queryUser}).toArray();
-
-    const userResults = results.map(user => ({
-        username: user.username, 
-        email: user.email, 
-        profilePicture: user.profilePicture}));
-
-    response.json({success: true, userResults});
-   
-})
 
 //logging in 
 app.post("/M00988347/login", async (request, response) => {
@@ -160,20 +103,61 @@ app.delete("/M00988347/login", async (request, response) => {
 });
 
 
+
+//uploading profile picture
+app.post("/M00988347/uploadProfilePicture", upload.single('profilePicture'), async (request, response) => {
+    const {username} = request.body;
+
+    if (!request.file) {
+        return response.json({ success: false, message: "No file uploaded" });
+    }
+
+    const filePath = "/M00988347/uploads/" + request.file.filename;
+    
+    const db = await connectToDatabase();
+    const users = db.collection("users");
+        
+    await users.updateOne(
+        {username},
+        {$set: { profilePicture: filePath }}
+    );
+    
+    response.json({success: true, filePath, message: "Profile picture uploaded"});
+})
+
+//get user details
+app.get("/M00988347/profile/:username", async (request, response) => {
+    const {username} = request.params;
+
+    const db = await connectToDatabase();
+    const users = db.collection("users");
+
+    const user = await users.findOne({username});
+    
+    response.json({ 
+        success: true, 
+        username: user.username,
+        email: user.email,
+        profilePicture: user.profilePicture || '/M00988347/Images/profile.jpg'
+    });
+});
+
+
+//posting
 app.post("/M00988347/contents", async (request, response) => {
     if (!request.session.user) {
         return response.json({success: false, message: "You must be logged in to post content"});
     }
 
-    const {title, caption, budget, location, weather, temperature, images} = request.body;
+    const {title, caption, budget, postLocation, weather, image} = request.body;
 
     const username = request.session.user.username;
 
-    if(!images){
+    if(!image){
         return response.json({success: false, message: "Post must have pictures"});
     }
 
-    if(!location){
+    if(!postLocation){
         return response.json({success: false, message: "Post must have a location"});
     }
 
@@ -185,15 +169,83 @@ app.post("/M00988347/contents", async (request, response) => {
         title: title || "",
         caption: caption || "", 
         budget: budget || 0, 
-        location,
+        postLocation,
         weather: weather || "",
-        temperature: temperature || 0, 
-        images, 
-        createdAt: new Date()});
+        image, 
+        createdAt: new Date()
+    });
 
-    response.json({success: true, caption, budget, location, weather, postPictures, message: "Created Post!"});
+    response.json({success: true, message: "Created Post!"});
 });
 
+//uploading post
+app.post("/M00988347/uploadPostImage", upload.single('postImage'), async (request, response) => {
+    if (!request.session.user) {
+        return response.json({success: false, message: "You must be logged in to upload images"});
+    }
+
+    if (!request.file) {
+        return response.json({success: false, message: "No file uploaded"});
+    }
+
+    const imagePath = "/M00988347/uploads/" + request.file.filename;
+
+    response.json({success: true, imagePath, message: "Image uploaded successfully"});
+});
+
+//get user posts
+app.get("/M00988347/users/:username/posts", async (request, response) => {
+    const {username} = request.params;
+
+    const db = await connectToDatabase();
+    const contents = db.collection("contents");
+
+    const posts = await contents.find({username}).sort({createdAt: -1}).toArray();
+
+    response.json({success: true, posts});
+    
+});
+
+
+app.get("/M00988347/contents", async (request, response) => {
+    const queryPosts = request.query.q || "";
+    
+    const db = await connectToDatabase();
+    const contents = db.collection("contents");
+
+    const results = await contents.find({
+        $or: [
+            { title: { $regex: queryPosts, $options: 'i' } },
+            { caption: { $regex: queryPosts, $options: 'i' } },
+            { postLocation: { $regex: queryPosts, $options: 'i' } }
+        ]
+    }).sort({ createdAt: -1 }).toArray();
+
+    response.json({success: true, results});
+});
+
+
+//searching for users
+app.get("/M00988347/users", async (request, response) => {
+    const queryUser = request.query.q || "";
+
+    const db = await connectToDatabase();
+    const users = db.collection("users");
+
+    const results = await users.find({username: { $regex: queryUser, $options: 'i' }}).toArray();
+
+    const userResults = results.map(user => ({
+        username: user.username, 
+        email: user.email, 
+        profilePicture: user.profilePicture || "/M00988347/Images/profile.jpg"
+    }));
+
+    response.json({success: true, userResults});
+   
+});
+
+
+//following someone
 app.post("/M00988347/follow", async (request, response) => {
     if (!request.session.user) {
         return response.json({success: false, message: "You must be logged in to follow someone"});
@@ -210,6 +262,22 @@ app.post("/M00988347/follow", async (request, response) => {
     response.json({success: true, message: `You are following ${followingUser}`});
 });
 
+//unfollowing someone
+app.delete("/M00988347/follow", async (request, response) => {
+    if (!request.session.user) {
+        return response.json({success: false, message: "You must be logged in to follow someone"});
+    }
+
+    const {followingUser} = request.body;
+    const followerUser = request.session.user.username
+
+    const db = await connectToDatabase();
+    const follows = db.collection("follows");
+
+    await follows.deleteOne({followerUser, followingUser});
+
+    response.json({success: true, message: `You unfollowed ${followingUser}`});
+});
 
 
 app.use('/M00988347', express.static(path.join(__dirname, 'public')));

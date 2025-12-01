@@ -21,6 +21,9 @@
         <script src="Javascript/authentication.js" defer></script>
         <script src="Javascript/index.js" defer></script>
         <script src="Javascript/route.js" defer></script>
+        <script src="Javascript/createPost.js" defer></script>
+        <script src="Javascript/explore.js" defer></script>
+        <script src="Javascript/userProfile.js" defer></script>
 
     </head>
     <body>
@@ -185,7 +188,7 @@
                                 <div class="upper-section">
                                     <div class="upper-left">
                                         <img src="Images/profile.jpg" class="post-profile-picture">
-                                        <h4 class="post-username">LoveTravel6262</h4>
+                                        <h4 class="post-username" id = "post-username">Hi</h4>
                                     </div>
                                     <h5 class="post-time">Posted 2 hrs ago</h5>
                                 </div>
@@ -282,7 +285,7 @@
 
                     <div class="explore" id = "explore">
                         <div class="search-bar">
-                            <input class="search" placeholder="Looking for something/someone specific?">
+                            <input id = "explore-search" class="search" placeholder="Looking for something/someone specific?">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </div>
 
@@ -291,38 +294,11 @@
                             <i class="fa-solid fa-angle-down"></i>
                         </div>
 
-                        <div class="explore-posts">
+                        <div class = "explore-users" id = "explore-users">
+                        </div>
+
+                        <div class="explore-posts" id = "explore-posts">
                             <div class="user-post">
-                                <div class="explore-post-image">
-
-                                    <div class="upper-section">
-                                        <div class="upper-left">
-                                            <img src="Images/profile.jpg" class="post-profile-picture">
-                                            <h4 class="post-username">LoveTravel6262</h4>
-                                        </div>
-                                        <h5 class="post-time">Posted 2 hrs ago</h5>
-                                    </div>
-
-                                    <div class="image-wrapper">
-                                        <img src="Images/Space.jpg" class="image">
-                                        <section class="react">
-                                            ✅ 😁 ✈️ 📌 ⭐
-                                        </section>
-                                    </div>
-                                    <div class="bottom-section">
-                                        <div class="bottom-top">
-                                            <div class="post-location-wrapper">
-                                                <i class="fa-solid fa-location-dot"></i>
-                                                <h2 class="post-location">Cape Town, South Africa</h2>
-                                            </div>
-                                            <div class="post-weather-wrapper">
-                                                <h2 class="post-weather">Partly Cloudy <span class="post-temperature">24°C</span></h2>
-                                                <img src="Images/cloudy.png" class="post-weather-image">
-                                            </div>
-                                        </div>
-                                        <h2 class="post-budget">Budget: $6k - $10k</h2>
-                                    </div>
-                                </div>
                             </div>                 
                         </div>
                     </div>
@@ -349,9 +325,9 @@
                             </div>
 
                             <div class="caption-input">
-                                <h2 class="caption-title">ADD CAPTION...</h2>
-                                <textarea class="add-caption" placeholder="Write your caption here..."></textarea>
-                                <input class="budget-input" type="text" placeholder="Enter budget (e.g., $1k - $5k)">
+                                <input class="caption-title" id = "caption-title">
+                                <textarea class="add-caption" id = "caption" placeholder="Write your caption here..."></textarea>
+                                <input class="budget-input" id = "budget" type="text" placeholder="Enter budget (e.g., $1k - $5k)">
                             </div>
                         </div>
                     
@@ -361,17 +337,17 @@
                             <img src="Images/indexImages/Space.jpg" alt="Map">
 
                             <div class="location-and-weather">
-                                <input class="location" type="text" placeholder="Enter location">
+                                <input id = "location" class="location" type="text" placeholder="Enter location">
                                 
                                 <div class="weather-container">
-                                    <input class="weather" type="text" placeholder="Enter weather">
+                                    <input class="weather" id = "weather" type="text" placeholder="Enter weather">
                                 </div>
                             </div>
                         </div>
                     </div>
                     
                     <div class = "post">
-                        <button type="button" class="post-button">POST</button>
+                        <button type="button" class="post-button" id = "post-button">POST</button>
                     </div>
                               
                 </main>
@@ -620,32 +596,31 @@
                 </main>
             </section>
 
-            <section id = "user-profile-section" class = "page-section" style = "display: none;">
-
-                <main class = "user-profile-main">
+            <section id="user-profile-section" class="page-section" style="display: none;">
+                <main class="user-profile-main">
                     <section class="profile">
                         <div class="user-profile">
-                            <img src="Images/profile.jpg" alt="User Profile" class="profile-image" id = "profile-image">
+                            <img src="Images/profile.jpg" alt="User Profile" class="profile-image" id="profile-image">
                             
                             <div class="profile-details">
-                                <h1 class="username" id = "profile-username"></h1>
+                                <h1 class="username" id="profile-username"></h1>
                                 
                                 <div class="profile-numbers">
                                     <div class="stat">
-                                        <span class="stat-number">247</span>
+                                        <span class="stat-number" id = "post-number"></span>
                                         <span class="stat-label">Posts</span>
                                     </div>
                                     <div class="stat">
-                                        <span class="stat-number">1.2K</span>
+                                        <span class="stat-number" id = "follower-number"></span>
                                         <span class="stat-label">Followers</span>
                                     </div>
                                     <div class="stat">
-                                        <span class="stat-number">892</span>
+                                        <span class="stat-number" id = "following-number"></span>
                                         <span class="stat-label">Following</span>
                                     </div>
                                 </div>
 
-                                <div class="action-buttons">
+                                <div class="action-buttons" id="action-buttons">
                                     <button class="follow-button">
                                         <i class="fa-solid fa-user-plus"></i>
                                         Follow
@@ -655,59 +630,34 @@
                                         Message
                                     </button>
                                 </div>
-                            </div>
 
+                                <div class="edit-profile" id="edit-profile">
+                                    <button class="edit-profile-button" id = "edit-profile-button">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                        Edit Profile
+                                    </button>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="user-bio">
-                            <p>🌍 Adventure seeker | 📸 Travel photographer</p>
-                            <p>Exploring the world one trail at a time ✈️</p> 
+                        <div class="user-bio" id = "user-bio">
+                            <p></p>
                         </div>
                     </section>
 
                     <section class="posts-section">
                         <div class="section-header">
                             <h2>POSTS</h2>
-                            <div class = "search-filter">
+                            <div class="search-filter">
                                 <h4>Filter by...</h4>
                                 <i class="fa-solid fa-angle-down"></i>
                             </div>
                         </div>
 
-                        <div class="posts-grid">
-                            <div class="post-item">
-                                <h3 class = "timestamp">Posted 1 hour ago</h3>
-                                <img src="Images/Space.jpg" alt="Post">
-                                <p class="post-caption-heading">Amazing sunset at the beach today!</p>
-                                <p class="post-caption">Coffee and the likes of it...</p>
-                            </div>
-
-                            <div class="post-item">
-                                <h3 class = "timestamp">Posted 2 hours ago</h3>
-                                <img src="Images/Space.jpg" alt="Post">
-                                <p class="post-caption-heading">Hiking through the mountains</p>
-                                <p class="post-caption">Coffee and the likes of it...</p>
-                            </div>
-
-                            <div class="post-item">
-                                <h3 class = "timestamp">Posted 2 days ago</h3>
-                                <img src="Images/Space.jpg" alt="Post">
-                                <p class="post-caption-heading">Coffee and views in the morning</p>
-                                <p class="post-caption">Coffee and the likes of it...</p>
-                            </div>
-
-                            <div class="post-item">
-                                <h3 class = "timestamp">Posted 12 days ago</h3>
-                                <img src="Images/Space.jpg" alt="Post">
-                                <p class="post-caption-heading">Street art in the old town</p>
-                                <p class="post-caption">Coffee and the likes of it...</p>
-                            </div>
-
-
+                        <div class="posts-grid" id = "posts-grid">
                         </div>
                     </section>
                 </main>
-
             </section>
 
         </section>

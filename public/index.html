@@ -88,29 +88,106 @@
                                 Upload Profile Picture
                             </button>
                         </div>
-                        <div class="input-field">
+                        <div class="input-field" id = "input-field-username">
                             <i class="fa-solid fa-user" style = "left: 0.75rem;"></i>
                             <input class="input-with-line" type="text" name="username" id = "signup-username" placeholder="Enter Username...">
                         </div>
-                        <div class="input-field">
+                        <p class="error" id="error-signup-username"></p>
+                        
+                        <div class="input-field" id = "input-field-password">
                             <div class="eye-toggle">
                                 <i id="eye-icon" class="fas fa-eye" style = "cursor: pointer;"></i>
                                 <i id="eye-slash" class="fas fa-eye-slash" style = "cursor: pointer;"></i>
                             </div>
                             <input class="input-with-line" type="password" name="password" id = "signup-password" placeholder="Enter Password...">
                         </div>
-                        <div class="input-field">
+                        <p class="error" id="error-signup-password"></p>
+
+                        <div class="input-field" id = "input-field-confirmPassword">
                             <div class="eye-toggle">
                                 <i id="eye-icon2" class="fas fa-eye" style = "cursor: pointer;"></i>
                                 <i id="eye-slash2" class="fas fa-eye-slash" style = "cursor: pointer;"></i>
                             </div>
                             <input class="input-with-line" type="password" name="confirmPassword" id = "signup-confirm-password" placeholder="Confirm Password...">
                         </div>
-                        <div class="input-field">
+                        <p class="error" id="error-signup-confirmPassword"></p>
+
+                        <div class="input-field" id = "input-field-email">
                             <i class="fa-solid fa-at"></i>
                             <input class="input-with-line" type="email" name="email" id = "signup-email" placeholder="Enter Email...">
                         </div>
+                        <p class="error" id="error-signup-email"></p>
+
+                        <div class="input-field" id = "input-field-date">
+                            <input class = "input-with-line" type="date" id="signup-date" name="date" required>
+                        </div>
+                        <p class="error" id="error-signup-date"></p>
+
+                        <div class="terms-checkbox-container" id="terms-checkbox-container">      
+                            <input type="checkbox" class = "terms-checkbox" id="terms-checkbox" name="terms-checkbox">
+                            <label for="terms-checkbox" class="terms-checkbox-label">
+                                I agree to the <span id="terms" class="terms">Terms & Conditions</span>
+                            </label>
+                        </div>
+                        <p class="error" id="error-signup-terms"></p>
                     </form>
+                    
+                </div>
+
+                <div class="hidden-box" id="hidden-box">
+                    <button class="close-terms" id="close-terms">&times;</button>
+                    <h3>Terms & Conditions</h3>
+                    <div class="terms-content">
+                        <h4>1. Acceptance of Terms</h4>
+                        <p>By creating an account or using Trailblaze, you agree to be bound by these Terms & Conditions.</p>
+
+                        <h4>2. Eligibility</h4>
+                        <p>You must be at least 13 years old to use Trailblaze. Users between 13 and 18 must have parental or guardian consent.</p>
+
+                        <h4>3. Account Responsibility</h4>
+                        <p>You are responsible for maintaining the confidentiality of your login credentials and for all activities that occur under your account.</p>
+
+                        <h4>4. User-Generated Content</h4>
+                        <p>You retain ownership of the photos, captions, locations, comments, and other content you post. By posting, you grant Trailblaze a worldwide, non-exclusive, royalty-free, transferable license to use, display, reproduce, and distribute your content for the purpose of operating, promoting, and improving Trailblaze.</p>
+
+                        <h4>5. Content Guidelines</h4>
+                        <p>You agree not to post content that:</p>
+                        <ul>
+                            <li>Violates any law or encourages illegal activity</li>
+                            <li>Is hateful, harassing, abusive, or discriminatory</li>
+                            <li>Infringes intellectual property, privacy, or publicity rights</li>
+                            <li>Contains explicit content or graphic violence</li>
+                            <li>Is false, misleading, or impersonates another person</li>
+                            <li>Reveals private locations of individuals without consent (e.g., home addresses, real-time tracking)</li>
+                        </ul>
+
+                        <h4>6. Location & Geotagging</h4>
+                        <p>By tagging a location in a post or sharing your current location, you confirm you have the right to share that information. Be mindful of your personal safety and avoid sharing exact real-time locations if it puts you at risk. Trailblaze is not responsible for misuse of location data by other users.</p>
+
+                        <h4>7. Reactions, Comments & Interactions</h4>
+                        <p>You are solely responsible for your comments and reactions. Harassment, spam, or repeated unwanted contact may result in account suspension.</p>
+
+                        <h4>8. Privacy & Data</h4>
+                        <p>Your personal data is handled according to our Privacy Policy. Public posts, usernames, profile pictures, and tagged locations are visible to all users.</p>
+
+                        <h4>9. Travel Planner & Collections</h4>
+                        <p>Saving posts to your Travel Planner or Collections is for personal use only. Trailblaze does not provide travel booking services, insurance, or safety guarantees. You are responsible for verifying all travel-related information.</p>
+
+                        <h4>10. Intellectual Property</h4>
+                        <p>The Trailblaze name, logo, and all platform features are owned by us or our licensors. You may not copy, modify, or create derivative works without written permission.</p>
+
+                        <h4>11. Termination</h4>
+                        <p>We may suspend or terminate your account at any time, with or without notice, for violations of these Terms or if we believe it is necessary to protect the community.</p>
+
+                        <h4>12. Travel Risks</h4>
+                        <p>You acknowledge that travel involves inherent risks. Trailblaze is a community platform, not a travel agency. You are solely responsible for your safety, visas, health precautions, and decisions based on user-generated content.</p>
+
+                        <h4>13. Changes to Terms</h4>
+                        <p>We may update these Terms at any time. Continued use of Trailblaze after changes constitutes acceptance of the new terms.</p>
+
+                        <h4>14. Contact</h4>
+                        <p>For questions about these Terms, contact us at: <strong>support@trailblaze.travel</strong></p>
+                    </div>
                 </div>
 
                 <button class = "registration-button" id = "signup-registration-button">SIGN UP</button>
@@ -124,17 +201,21 @@
                 <h2>Please login with your username and password</h2>
                 
                 <form class = "login-form" action = "/M00988347/login" method = "post">
-                    <div class="input-field">
+                    <div class="input-field" id = "input-field-login-username">
                         <i class="fa-solid fa-user" style = "left: 0.75rem;"></i>
                         <input class="input-with-line" type="text" name="username" id = "login-username" placeholder="Enter Username...">
                     </div>
-                    <div class="input-field">
+                    <p class="error" id="error-login-username"></p>
+
+                    <div class="input-field" id = "input-field-login-password">
                         <div class="eye-toggle">
                             <i id="login-eye-icon" class="fas fa-eye" style = "cursor: pointer;"></i>
                             <i id="login-eye-slash" class="fas fa-eye-slash" style = "cursor: pointer;"></i>
                         </div>
                         <input class="input-with-line" type="password" name="password" id = "login-password" placeholder="Enter Password...">
                     </div>
+                    <p class="error" id="error-login-password"></p>
+
                 </form>
 
                 <button class = "registration-button" id = "login-registration-button">LOGIN</button>

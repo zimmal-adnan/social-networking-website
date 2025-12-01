@@ -1,3 +1,5 @@
+
+
 //signup and login password visibility
 function eyeIconLogic(eyeShut, eyeOpen, passwordInput) {
     eyeShut.addEventListener("click", () => {
@@ -149,20 +151,38 @@ signupInputFile.addEventListener("change", () => {
 });
 
 
+function clearSignupErrors() {
+    document.getElementById("error-signup-username").textContent = "";
+    document.getElementById("error-signup-password").textContent = "";
+    document.getElementById("error-signup-confirmPassword").textContent = "";
+    document.getElementById("error-signup-email").textContent = "";
+    document.getElementById("error-signup-date").textContent = "";
+    document.getElementById("error-signup-terms").textContent = "";
+}
 
+function clearLoginErrors() {
+    document.getElementById("error-login-username").textContent = "";
+    document.getElementById("error-login-password").textContent = "";
+}
 
 //signup functionality
 const signupRegistrationButton = document.getElementById("signup-registration-button");
 signupRegistrationButton.addEventListener("click", async () => {
+    clearSignupErrors();
+
     const username = document.getElementById("signup-username").value;
     const password = document.getElementById("signup-password").value;
     const confirmPassword = document.getElementById("signup-confirm-password").value;
     const email = document.getElementById("signup-email").value;
+    const dateOfBirth = document.getElementById("signup-date").value;
+    const acceptedTerms = document.getElementById("terms-checkbox").checked;
     
+    
+
     const response = await fetch("/M00988347/users", {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({username, password, confirmPassword, email})
+        body: JSON.stringify({username, password, confirmPassword, email, dateOfBirth, acceptedTerms})
     });
 
     const data = await response.json();
@@ -185,18 +205,71 @@ signupRegistrationButton.addEventListener("click", async () => {
             } else {
                 alert('Registration successful but profile picture upload failed: ' + uploadData.message);
             }
-        } else {
-            alert('Registration successful!');
-        }
+        } 
 
-        await loadUserProfile(username);
+        await loadUserProfile(username, true);
         
         showFeed();
         history.pushState({}, "", "/M00988347/feed");
         selectedProfilePicture = null;
         signupProfilePicture.src = "Images/profile.jpg";
-    } else {
-        alert(data.message);
+    } 
+    else {
+        clearSignupErrors();
+        for(const field in data.errors){
+            const input = document.getElementById("signup-" + field);
+            const errorMessage = document.getElementById("error-signup-" + field);
+            const fieldInput = document.getElementById("input-field-" + field);
+
+            if (errorMessage) {
+                errorMessage.textContent = data.errors[field];
+            }
+            if (fieldInput) {
+                fieldInput.classList.add("input-error-highlight");
+            }
+            if (field === "terms") {
+                const termsContainer = document.getElementById("terms-checkbox");
+                if (termsContainer) {
+                    termsContainer.classList.add("input-error-terms");
+                }
+            }
+
+            if (input) {
+                input.addEventListener("input", () => {
+                    if (errorMessage) {
+                        errorMessage.textContent = "";
+                    }
+                    if (fieldInput) {
+                        fieldInput.classList.remove("input-error-highlight");
+                    }
+                });
+            }
+
+        }
+
+        const dateErrorMessage = document.getElementById("error-signup-date");
+        const dateInput = document.getElementById("signup-date");
+        const dateFieldInput = document.getElementById("input-field-date");
+        
+        if (dateInput) {
+            dateInput.addEventListener("input", clearDateError);
+            dateInput.addEventListener("change", clearDateError); // For date pickers
+        }
+
+        function clearDateError() {
+            if (dateErrorMessage) {
+                dateErrorMessage.textContent = "";
+            }
+            if (dateFieldInput) {
+                dateFieldInput.classList.remove("input-error-highlight");
+            }
+        }
+
+        if (!dateOfBirth) {
+            dateErrorMessage.textContent = "Please select your date of birth";
+            dateFieldInput.classList.add("input-error-highlight");
+        }
+        return;
     }
 });
 
@@ -206,6 +279,8 @@ signupRegistrationButton.addEventListener("click", async () => {
 //login functionality
 const loginRegistrationButton = document.getElementById("login-registration-button");
 loginRegistrationButton.addEventListener("click", async () => {
+    clearLoginErrors();
+
     const username = document.getElementById("login-username").value;
     const password = document.getElementById("login-password").value;
 
@@ -219,11 +294,34 @@ loginRegistrationButton.addEventListener("click", async () => {
 
     if (data.success == true) {
         alert('Login successful!');
-        await loadUserProfile(data.username);
+        await loadUserProfile(data.username, true);
         showFeed();
         history.pushState({}, "", "/M00988347/feed");
     } else {
-        alert(data.message);
+
+        for(const field in data.errors){
+            const input = document.getElementById("login-" + field);
+            const errorMessage = document.getElementById("error-login-" + field);
+            const fieldInput = document.getElementById("input-field-login-" + field);
+            
+            if (errorMessage) {
+                errorMessage.textContent = data.errors[field];
+            } 
+            if (fieldInput) {
+                fieldInput.classList.add("input-error-highlight");
+            }
+
+            if (input) {
+                input.addEventListener("input", () => {
+                    if (errorMessage) {
+                        errorMessage.textContent = "";
+                    }
+                    if (fieldInput) {
+                        fieldInput.classList.remove("input-error-highlight");
+                    }
+                });
+            }
+        }
     }
 });
 
@@ -278,23 +376,22 @@ logOutButton.addEventListener('mouseleave', hideBox);
 profileButton.addEventListener('mouseleave', hideBox);
 
 
-//load profile picture with username on the navbar
-async function loadUserProfile(username) {
-    const response = await fetch(`/M00988347/profile/${username}`);
-    const data = await response.json();
 
-    if (data.success == true) {
-        const navProfilePicture = document.getElementById("nav-profile");
-        navProfilePicture.src = data.profilePicture;
+const termsLink = document.getElementById('terms');
+const hiddenBox = document.getElementById('hidden-box');
+const closeTerms = document.getElementById('close-terms');
 
-        const navUsername = document.getElementById("nav-username");
-        navUsername.textContent = data.username;
+termsLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    hiddenBox.classList.toggle('show');
+});
 
-        const userProfilePicture = document.getElementById("profile-image");
-        userProfilePicture.src = data.profilePicture;
+closeTerms.addEventListener('click', () => {
+    hiddenBox.classList.remove('show');
+});
 
-        const userProfileUsername = document.getElementById("profile-username");
-        userProfileUsername.textContent = data.username;
+hiddenBox.addEventListener('click', (e) => {
+    if (e.target === hiddenBox) {
+        hiddenBox.classList.remove('show');
     }
-}
-
+});

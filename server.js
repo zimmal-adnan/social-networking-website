@@ -42,24 +42,58 @@ app.use(expressSession({
 
 //registering
 app.post("/M00988347/users", async (request, response) => {
-    const {username, password, confirmPassword, email, selectedProfilePicture} = request.body;
+    const {username, password, confirmPassword, email, dateOfBirth, acceptedTerms, selectedProfilePicture} = request.body;
 
     const db = await connectToDatabase();
     const users = db.collection("users");
 
-    const existingUser = await users.findOne({username});
+    let errors = {};
 
-    if (existingUser) {
-        return response.json({success: false, message: "Username already exists"});
+    if(!username || username.length < 3){
+        errors.username = "Username must be at least 3 characters";
     }
-    if (password.length < 4) {
-        return response.json({success: false, message: "Password must be at least 4 characters"});
+    const existingUser = await users.findOne({username});
+    if (existingUser) {
+        errors.username = "Username already exists";
+    }
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+        errors.email = "Please enter a correct email address";
+    }
+
+    if (!password || password.length < 4) {
+        errors.password = "Password must be at least 4 characters";
     }
     if (password !== confirmPassword) {
-        return response.json({success: false, message: "Passwords do not match"});
+        errors.confirmPassword = "Passwords do not match";
     }
 
-    await users.insertOne({username, password, email, profilePicture: "/M00988347/Images/profile.jpg", createdAt: new Date()});
+
+    const birth = new Date(dateOfBirth);
+    const currentDate = new Date();
+
+    let age = currentDate.getFullYear() - birth.getFullYear();
+    const monthDifference = currentDate.getMonth() - birth.getMonth();
+    if (monthDifference < 0 || (monthDifference === 0 && currentDate.getDate() < birth.getDate())) {
+        age--;
+    }
+    if(age < 13){
+        errors.dateOfBirth = "You must be at least 13 years old";
+    }
+    if (age > 125) {
+        errors.dateOfBirth = "Please enter a valid date of birth";
+    }
+
+    if(!acceptedTerms){
+        errors.terms = "You must accept the terms & conditions";
+    }
+
+    if (Object.keys(errors).length > 0) {
+        return response.json({success: false, errors});
+    }
+
+    await users.insertOne({username, password, email, dateOfBirth, profilePicture: "/M00988347/Images/profile.jpg", createdAt: new Date()});
 
     request.session.user = {username}; 
 
@@ -73,13 +107,20 @@ app.post("/M00988347/login", async (request, response) => {
     const db = await connectToDatabase();
     const users = db.collection("users");
 
-    const user = await users.findOne({username});
+    let errors = {};
 
+    const user = await users.findOne({username});
     if (!user) {
-        return response.json({success: false, message: "Username not found"});
+        errors.username = "Username not found";
     }
-    if (user.password !== password) {
-        return response.json({success: false, message: "Incorrect password"});
+    else {
+        if (user.password !== password) {
+            errors.password = "Incorrect password";
+        }
+    }
+
+    if (Object.keys(errors).length > 0) {
+        return response.json({success: false, errors});
     }
 
     request.session.user = {username: user.username};

@@ -150,7 +150,7 @@ app.post("/M00988347/uploadProfilePicture", upload.single('profilePicture'), asy
     const {username} = request.body;
 
     if (!request.file) {
-        return response.json({ success: false, message: "No file uploaded" });
+        return response.json({success: false, message: "No file uploaded"});
     }
 
     const filePath = "/M00988347/uploads/" + request.file.filename;
@@ -160,7 +160,7 @@ app.post("/M00988347/uploadProfilePicture", upload.single('profilePicture'), asy
         
     await users.updateOne(
         {username},
-        {$set: { profilePicture: filePath }}
+        {$set: {profilePicture: filePath}}
     );
     
     response.json({success: true, filePath, message: "Profile picture uploaded"});
@@ -190,7 +190,7 @@ app.post("/M00988347/contents", async (request, response) => {
         return response.json({success: false, message: "You must be logged in to post content"});
     }
 
-    const {title, caption, budget, postLocation, weather, image} = request.body;
+    const {title, caption, budgetCurrency, budgetMin, budgetMax, postLocation, weatherCelsius, weatherFahrenheit, weatherType, image} = request.body;
 
     const username = request.session.user.username;
 
@@ -205,16 +205,26 @@ app.post("/M00988347/contents", async (request, response) => {
     const db = await connectToDatabase();
     const contents = db.collection("contents");
 
-    await contents.insertOne({
+    const postData = {
         username,
         title: title || "",
         caption: caption || "", 
-        budget: budget || 0, 
+        budget: {
+            currency: budgetCurrency || "USD",
+            min: budgetMin || null,
+            max: budgetMax || null
+        },
         postLocation,
-        weather: weather || "",
+        weather: {
+            celsius: weatherCelsius || null,
+            fahrenheit: weatherFahrenheit || null,
+            type: weatherType || "Sunny"
+        },
         image, 
         createdAt: new Date()
-    });
+    };
+
+    await contents.insertOne(postData);
 
     response.json({success: true, message: "Created Post!"});
 });
@@ -247,7 +257,7 @@ app.get("/M00988347/users/:username/posts", async (request, response) => {
     
 });
 
-
+//searching for posts
 app.get("/M00988347/contents", async (request, response) => {
     const queryPosts = request.query.q || "";
     

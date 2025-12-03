@@ -118,9 +118,11 @@
     box-shadow: inset 0 0px 5px 1px rgba(0,0,0,0.2);
 }
 
+
 .caption-input {
     background-color: #637c6f;
     padding: 1rem;
+    padding-top: 0.5rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between; 
@@ -139,6 +141,22 @@
     
 }
 
+
+.add-caption-title{     
+    background-color: #4f665b;
+    font-family: "GaretBold";
+    font-size: 1rem;
+    color: #ced9b4;
+    padding: 0.5rem;  
+    border-radius: 0.3rem;
+    transition: all 0.3s ease;
+    outline: none;
+    border: 1px solid transparent;
+    margin: 0.5rem 0;
+}
+
+
+
 .add-caption{
     flex-grow: 1;      
     background-color: #4f665b;
@@ -154,7 +172,7 @@
     border: 1px solid transparent;
 }
 
-.add-caption:focus {
+.add-caption:focus, .add-caption-title:focus {
     outline: none;
     background-color: #51685c;
     border: 1px solid #083839;
@@ -162,36 +180,94 @@
 
 }
 
-.add-caption::placeholder{
+.add-caption::placeholder, .add-caption-title::placeholder{
     color: rgba(255, 255, 255, 0.4);
 }
 
-.budget-input {
-    margin: 1rem 0;
-    margin-bottom: 0rem;
-    font-family: "Economica";
-    width: calc(100% - 1rem); 
-    padding: 0.5rem;
-    border: none;
+.caption-counter{
+    font-family: "Garet";
+    font-size: 0.65rem;
+    display: flex;
+    justify-content: end;
+    color: #e0e7cf7c;
+    margin-bottom: 0.3rem;
+}
+
+.budget-label{
+    font-family: "GaretBold";
+    word-spacing: 1px;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.3rem;
+    font-weight: bold;
+    display: block;
+    font-size: 1.1rem;
+    color: #e0e7cfc3;
+}
+
+.budget-input-group{
+    display: flex;
+    flex-direction: row;
+}
+
+.budget-currency {
+    padding: 0.3rem;
+    padding-right: 0rem;
+    border: 2px solid #485f53;
     border-radius: 0.5rem;
-    border: 1px solid black;
+    background: #8ba396;
+    font-family: "Garet";
+    font-weight: bold;
+    font-size: 0.8rem;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+    margin-right: 0.2rem;
+}
+
+.budget-currency:focus{
+    background-color: #9db4a8;
+    border: 2px solid #083839;
+}
+
+
+.budget-input {
+    font-family: "Economica";
+    width: calc(40% - 1rem); 
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 2px solid #485f53;
     background-color: #8ba396;
     font-size: 0.9rem;
     color: black;
     transition: all 0.3s ease;
+    outline: none;
+    color: #083839;
+}
 
+.budget-input::-webkit-outer-spin-button,
+.budget-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .budget-input:focus {
-    border: 1px solid #083839;
+    border: 2px solid #083839;
     outline: none;
     background-color: #9db4a8;
     box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-    
 }
 
 .budget-input::placeholder{
-    color: rgba(0, 0, 0, 0.5);
+    color: #485f53d5;
+}
+
+.budget-dash{
+    position: relative;
+    top: 1rem;
+    height: 0;
+    border: 2px solid #083839;
+    width: 1rem;
+    margin: 0rem 0.8rem;
 }
 
 .location-input {
@@ -220,34 +296,151 @@
 
 .location-and-weather {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    gap: 1rem; 
+    justify-content: space-between;
+    gap: 2rem;
 }
 
-.location-and-weather input {
+.location-container {
+    width: 100%;
+}
+
+.location-label {
+    font-family: "GaretBold";
+    color: #083839;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    display: block;
+    letter-spacing: 0.5px;
+}
+
+.location-container input {
     font-family: "Economica";
     letter-spacing: 0.5px;
-    width: 22rem;
-    padding: 0.5rem 1rem;
-    border: 1px solid #083839;
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 2px solid #485f53;
     border-radius: 0.5rem;
     background-color: #637c6f;
     color: #ced9b4;
     font-size: 1.1rem;
     transition: all 0.3s ease;
+    box-sizing: border-box;
 }
 
-.location-and-weather input:focus {
+.location-container input:focus {
     outline: none;
     background-color: #748d80;
-    border: 1px solid #083839;
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border: 2px solid #083839;
+    box-shadow: 0 0 8px rgba(8, 56, 57, 0.3);
 }
 
-.location-and-weather input::placeholder {
+.location-container input::placeholder {
     color: #ced9b489;
+}
+
+.weather-container {
+    width: 100%;
+}
+
+.weather-label {
+    font-family: "GaretBold";
+    color: #083839;
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+}
+
+.weather-inputs-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.weather-field {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    gap: 0.3rem;
+}
+
+.weather-field span{
+    font-family: "Garet";
+    color: #083839;
+}
+
+.weather-input {
+    width: 100%;
+    padding: 0.7rem;
+    font-family: "Economica";
+    border: 2px solid #485f53;
+    background-color: #637c6f;
+    color: #ced9b4;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.weather-input::-webkit-outer-spin-button,
+.weather-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.weather-separator {
+    width: 0.1rem;
+    height: 40px;
+    background-color: #485f53;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.weather-field input:focus {
+    outline: none;
+    background-color: #748d80;
+    border: 2px solid #083839;
+    box-shadow: 0 0 8px rgba(8, 56, 57, 0.3);
+}
+
+.weather-field input::placeholder {
+    color: #ced9b489;
+}
+
+.weather-type-field {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    margin-left: 0.5rem;
+}
+
+
+.weather-type {
+    cursor: pointer;
+    width: 100%;
+    padding: 0.5rem;
+    font-family: "Garet";
+    border: 2px solid #485f53;
+    background-color: #637c6f;
+    color: #ced9b4;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.weather-type:focus {
+    outline: none;
+    background-color: #748d80;
+    border: 2px solid #083839;
+    box-shadow: 0 0 8px rgba(8, 56, 57, 0.3);
+}
+
+.temperature-separator {
+    font-family: "GaretBold";
+    color: #083839;
+    font-size: 1.2rem;
+    margin: 0;
+    padding: 0;
 }
 
 

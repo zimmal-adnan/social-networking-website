@@ -288,3 +288,78 @@ body{
     font-size: 2.5rem;
     text-align: center; 
 }
+
+
+.post-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 2rem 0;
+}
+
+.post-overlay.active {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.post-content {
+    position: relative;
+    width: 90%;
+    max-width: 70rem;
+    margin: auto;
+    animation: postSlideIn 0.3s ease-out;
+}
+
+@keyframes postSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.close-post {
+    position: absolute;
+    top: -2.5rem;
+    right: 0;
+    background-color: #e0e7cf;
+    border: 2px solid #083839;
+    color: #083839;
+    font-size: 1.5rem;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-family: "GaretBold";
+}
+
+.close-post:hover {
+    background-color: #083839;
+    color: #e0e7cf;
+    transform: rotate(90deg);
+}
+
+
+.post-item {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.post-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}

@@ -232,11 +232,11 @@
                 </div>
 
                 <div class="nav-links">
-                    <i class="fa-regular fa-comment-dots" id="nav-messages"></i>
-                    <i class="fa-solid fa-house-chimney" id="nav-feed"></i>
-                    <i class="fa-regular fa-square-plus" id="nav-create"></i>
-                    <i class="fa-solid fa-magnifying-glass" id="nav-explore"></i>
-                    <i class="fa-solid fa-book-open" id="nav-planner"></i>
+                    <i class="fa-regular fa-comment-dots" id="nav-messages" title = "Messages"></i>
+                    <i class="fa-solid fa-house-chimney" id="nav-feed" title = "Your Feed"></i>
+                    <i class="fa-regular fa-square-plus" id="nav-create" title = "Create A Post"></i>
+                    <i class="fa-solid fa-magnifying-glass" id="nav-explore" title = "Explore"></i>
+                    <i class="fa-solid fa-book-open" id="nav-planner" title = "Travel Planner"></i>
                 </div>
 
                 <div class="app-profile-picture">
@@ -406,9 +406,31 @@
                             </div>
 
                             <div class="caption-input">
-                                <input class="caption-title" id = "caption-title">
+                                <input class="add-caption-title" id = "add-caption-title" placeholder = "Add title..." maxlength = "35">                    
                                 <textarea class="add-caption" id = "caption" placeholder="Write your caption here..."></textarea>
-                                <input class="budget-input" id = "budget" type="text" placeholder="Enter budget (e.g., $1k - $5k)">
+                                <div class="caption-counter" id="caption-counter"><span id = "word-count">0</span> / 100 words</div>
+                                
+                                <div class = "budget-container">
+                                    <label class="budget-label">Budget Range</label>
+                                    
+                                    <div class = "budget-input-group">
+                                        <select id="budget-currency" class="budget-currency">
+                                            <option value="USD">$</option>
+                                            <option value="EUR">€</option>
+                                            <option value="GBP">£</option>
+                                            <option value="JPY">¥</option>
+                                            <option value="INR">₹ </option>
+                                            <option value="CAD">$</option>
+                                            <option value="AUD">$</option>
+                                            <option value="CNY">¥</option>
+                                            <option value="KRW">₩</option>
+                                        </select>
+
+                                        <input class="budget-input" id = "budget-min" type="number" min="0" max="9" step="1" placeholder="From...">
+                                        <hr class = "budget-dash">
+                                        <input class="budget-input" id = "budget-max" type="number" min="0" max="9" step="1" placeholder = "To...">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     
@@ -418,10 +440,42 @@
                             <img src="Images/indexImages/Space.jpg" alt="Map">
 
                             <div class="location-and-weather">
-                                <input id = "location" class="location" type="text" placeholder="Enter location">
+                                <div class = "location-container">
+                                    <label class="location-label">Location</label>
+                                    <input id = "location" class="location" type="text" placeholder="Enter location">
+                                </div>
+                                
                                 
                                 <div class="weather-container">
-                                    <input class="weather" id = "weather" type="text" placeholder="Enter weather">
+                                    <label class="weather-label">Weather Information</label>
+                                    <div class="weather-inputs-row">
+                                        <div class="weather-field">
+                                            <input class = "weather-input" id="weather-in-celsius" type = "number" min = "-200" max = "200" step = "1">
+                                            <span>°C</span>
+                                        </div>
+
+                                        <div class="weather-separator"></div>
+
+                                        <div class="weather-field" style = "margin-left: 0.5rem;">
+                                            <input class = "weather-input" id="weather-in-farenheit" type = "number" min = "-500" max = "500" step = "1">
+                                            <span>°F</span>
+                                        </div>
+                
+                                        <div class="weather-type-field">
+                                            <select id="weather-type" class="weather-type">
+                                                <option value="Sunny">☀️ Sunny</option>
+                                                <option value="Partly Cloudy">⛅ Partly Cloudy</option>
+                                                <option value="Cloudy">☁️ Cloudy</option>
+                                                <option value="Light Rain">🌦️ Light Rain</option>
+                                                <option value="Heavy Rain">🌧️ Heavy Rain</option>
+                                                <option value="Thunder">⛈️ Thunder</option>
+                                                <option value="Hail">🌨️ Hail</option>
+                                                <option value="Snow">❄️ Snow</option>
+                                                <option value="Foggy">🌫️ Foggy</option>
+                                                <option value="Windy">💨 Windy</option>
+                                            </select>
+                                        </div>
+                                    </div>    
                                 </div>
                             </div>
                         </div>
@@ -738,6 +792,13 @@
                         <div class="posts-grid" id = "posts-grid">
                         </div>
                     </section>
+
+                    <div class="post-overlay" id="post-overlay">
+                        <div class="post-content">
+                            <button class="close-post" id="close-post">&times;</button>
+                        </div>
+                    </div>
+
                 </main>
             </section>
 

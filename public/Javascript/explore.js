@@ -74,10 +74,23 @@ function createUserCard(user) {
         <h3 class="explore-username">${user.username}</h3>
     `;
 
-    userCard.addEventListener("click", () => {
-        loadUserProfile(user.username, false);
-        showUserProfile();
-        history.pushState({}, "", `/M00988347/userProfile/${user.username}`);
+    userCard.addEventListener("click", async () => {
+        const response = await fetch("/M00988347/login");
+        const data = await response.json();
+        
+        if (data.loggedIn) {
+            const isCurrentUser = user.username === data.username;
+            
+            if (isCurrentUser) {
+                history.pushState({}, "", "/M00988347/userProfile");
+                await loadUserProfile(user.username, true);
+            } else {
+                history.pushState({}, "", `/M00988347/userProfile/${user.username}`);
+                await loadUserProfile(user.username, false);
+            }
+            
+            showUserProfile();
+        }
     });
 
     return userCard;

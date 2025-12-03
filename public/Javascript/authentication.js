@@ -177,7 +177,6 @@ signupRegistrationButton.addEventListener("click", async () => {
     const dateOfBirth = document.getElementById("signup-date").value;
     const acceptedTerms = document.getElementById("terms-checkbox").checked;
     
-    
 
     const response = await fetch("/M00988347/users", {
         method: "POST",
@@ -187,12 +186,12 @@ signupRegistrationButton.addEventListener("click", async () => {
 
     const data = await response.json();
 
-    if (data.success == true) {
-        if (selectedProfilePicture) {
+    if (data.success == true) { 
+        if (selectedProfilePicture) { 
             const form = new FormData();
             form.append("profilePicture", selectedProfilePicture);
-            form.append("username", username);
-
+            form.append("username", username); 
+       
             const uploadResponse = await fetch("/M00988347/uploadProfilePicture", {
                 method: "POST",
                 body: form
@@ -212,7 +211,7 @@ signupRegistrationButton.addEventListener("click", async () => {
         showFeed();
         history.pushState({}, "", "/M00988347/feed");
         selectedProfilePicture = null;
-        signupProfilePicture.src = "Images/profile.jpg";
+        signupProfilePicture.src = "Images/profile.jpg"; //standard guest pfp
     } 
     else {
         clearSignupErrors();
@@ -253,7 +252,7 @@ signupRegistrationButton.addEventListener("click", async () => {
         
         if (dateInput) {
             dateInput.addEventListener("input", clearDateError);
-            dateInput.addEventListener("change", clearDateError); // For date pickers
+            dateInput.addEventListener("change", clearDateError); 
         }
 
         function clearDateError() {

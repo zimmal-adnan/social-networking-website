@@ -81,7 +81,7 @@ function showUserProfile(){
     mainAppSection.style.display = "block";
 }
 
-function handleRoute() {
+async function handleRoute() {
     const path = window.location.pathname;
 
     if (path.endsWith("/authentication")) showAuthentication("login");
@@ -91,7 +91,22 @@ function handleRoute() {
     else if (path.endsWith("/createPost")) showCreatePost();
     else if (path.endsWith("/message")) showMessages();
     else if (path.endsWith("/travelPlanner")) showTravelPlanner();
-    else if (path.endsWith("/userProfile")) showUserProfile();
+    else if (path.endsWith("/userProfile")) {
+        showUserProfile();
+        const pathParts = path.split("/");
+        const usernameFromURL = pathParts[pathParts.length - 1];
+        
+        const response = await fetch("/M00988347/login");
+        const data = await response.json();
+        
+        if (data.loggedIn) {
+            if (usernameFromURL && usernameFromURL !== "userProfile") {
+                await loadUserProfile(usernameFromURL, false);
+            } else {
+                await loadUserProfile(data.username, true);
+            }
+        }
+    }
     else if (path.endsWith("/")) showHome();
     else showWrongPage();
 }

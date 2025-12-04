@@ -172,14 +172,20 @@ app.get("/M00988347/profile/:username", async (request, response) => {
 
     const db = await connectToDatabase();
     const users = db.collection("users");
+    const follows = db.collection("follows");
 
     const user = await users.findOne({username});
+
+    const followerCount = await follows.countDocuments({followingUser: username});
+    const followingCount = await follows.countDocuments({followerUser: username});
     
     response.json({ 
         success: true, 
         username: user.username,
         email: user.email,
-        profilePicture: user.profilePicture || '/M00988347/Images/profile.jpg'
+        profilePicture: user.profilePicture || '/M00988347/Images/profile.jpg',
+        followerCount,
+        followingCount
     });
 });
 
@@ -266,7 +272,7 @@ app.get("/M00988347/contents", async (request, response) => {
 
     const results = await contents.find({
         $or: [
-            { title: { $regex: queryPosts, $options: 'i' } },
+            {title: {$regex: queryPosts, $options: 'i' } },
             { caption: { $regex: queryPosts, $options: 'i' } },
             { postLocation: { $regex: queryPosts, $options: 'i' } }
         ]
@@ -283,7 +289,7 @@ app.get("/M00988347/users", async (request, response) => {
     const db = await connectToDatabase();
     const users = db.collection("users");
 
-    const results = await users.find({username: { $regex: queryUser, $options: 'i' }}).toArray();
+    const results = await users.find({username: {$regex: queryUser, $options: 'i'}}).toArray();
 
     const userResults = results.map(user => ({
         username: user.username, 
@@ -303,15 +309,43 @@ app.post("/M00988347/follow", async (request, response) => {
     }
 
     const {followingUser} = request.body;
-    const followerUser = request.session.user.username
+    const followerUser = request.session.user.username;
+
+    if (followerUser === followingUser) {
+        return response.json({success: false, message: "You cannot follow yourself"});
+    }
 
     const db = await connectToDatabase();
     const follows = db.collection("follows");
+
+    const existingFollow = await follows.findOne({followerUser, followingUser});
+    
+    if (existingFollow) {
+        return response.json({success: false, message: "Already following this user"});
+    }
 
     await follows.insertOne({followerUser, followingUser});
 
     response.json({success: true, message: `You are following ${followingUser}`});
 });
+
+app.get("/M00988347/follow/:username", async (request, response) => {
+    if (!request.session.user) {
+        return response.json({success: false, following: false});
+    }
+
+    const followerUser = request.session.user.username;   
+    const followingUser = request.params.username;        
+
+    const db = await connectToDatabase();
+    const follows = db.collection("follows");
+
+    const existingFollow = await follows.findOne({followerUser, followingUser});
+    const following = existingFollow != null;
+
+    response.json({success: true, following});
+});
+
 
 //unfollowing someone
 app.delete("/M00988347/follow", async (request, response) => {
@@ -325,10 +359,13 @@ app.delete("/M00988347/follow", async (request, response) => {
     const db = await connectToDatabase();
     const follows = db.collection("follows");
 
-    await follows.deleteOne({followerUser, followingUser});
+    const result = await follows.deleteOne({followerUser, followingUser});
 
-    response.json({success: true, message: `You unfollowed ${followingUser}`});
+    if (result.deletedCount > 0) {
+        response.json({success: true, message: `You unfollowed ${followingUser}`});
+    }
 });
+
 
 
 app.use('/M00988347', express.static(path.join(__dirname, 'public')));

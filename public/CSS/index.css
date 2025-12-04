@@ -66,7 +66,7 @@ hr{
 
 /*https://codepen.io/nefejames/pen/ogvNgJq*/
 .to-login-button{
-    width: 20rem;
+    width: 25rem;
     position: relative;
     overflow: hidden;
     color: #e0e7cf;
@@ -76,7 +76,7 @@ hr{
     border: 2px solid #e0e7cf;
     font-family: "GaretBold";
     letter-spacing: 3px;
-    font-size: 2.2rem;
+    font-size: 2rem;
     padding: 0.3rem 1.5rem;
     transition: all 0.4s ease;
     cursor: pointer;
@@ -120,15 +120,6 @@ hr{
     pointer-events: none;
 }
 
-.orbiter{
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    height: 30rem;
-    animation: orbit 80s linear infinite;
-    transform-origin: center 90rem;
-}
-
 
 @keyframes orbit { 
     from { 
@@ -156,95 +147,6 @@ hr{
     }
 }
 
-.orbiter .building{
-    position: absolute;  
-    top: -25%;    
-    width: 5rem;             
-    height: auto;
-    pointer-events: none;
-    animation: buildingRotate 80s linear infinite;
-}
-
-.orbiter .lighthouse-alexandria{
-    top: -10%;
-    left: 10rem; 
-    animation: lighthouseRotate 80s linear infinite;
-}
-
-.orbiter .pyramids{
-    top: 40%;
-    width: 8rem;
-    left: -50rem; 
-    animation: pyramidRotate 80s linear infinite;
-}
-
-.orbiter .burj-khalifa{
-    top: 40rem;
-    width: 8rem;
-    left: -90rem; 
-    animation: burjRotate 140s linear infinite;
-}
-
-@keyframes burjRotate{
-    0% { 
-        transform: rotate(-90deg); 
-    }   
-    55%{
-        transform: rotate(90deg); 
-    }
-    60%{
-        transform: rotate(300deg); 
-    }
-    100%{
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes pyramidRotate {
-    0% { 
-        transform: rotate(-50deg); 
-    }   
-    55%{
-        transform: rotate(90deg); 
-    }
-    60%{
-        transform: rotate(300deg); 
-    }
-    100%{
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes lighthouseRotate {
-    0% { 
-        transform: rotate(10deg); 
-    }   
-    55%{
-        transform: rotate(90deg); 
-    }
-    60%{
-        transform: rotate(300deg); 
-    }
-    100%{
-        transform: rotate(360deg);
-    }
-}
-
-
-@keyframes buildingRotate {
-    0% { 
-        transform: rotate(0deg); 
-    }   
-    55%{
-        transform: rotate(90deg); 
-    }
-    60%{
-        transform: rotate(300deg); 
-    }
-    100%{
-        transform: rotate(360deg);
-    }
-}
 
 #shooting-star{
     position: absolute;

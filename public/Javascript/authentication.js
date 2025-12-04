@@ -292,7 +292,6 @@ loginRegistrationButton.addEventListener("click", async () => {
     const data = await response.json();
 
     if (data.success == true) {
-        alert('Login successful!');
         await loadUserProfile(data.username, true);
         showFeed();
         history.pushState({}, "", "/M00988347/feed");
@@ -345,9 +344,15 @@ logOutButton.addEventListener("click", async () => {
     }
 });
 
-profileButton.addEventListener("click", () => {
-    showUserProfile();
-    history.pushState({}, "", "/M00988347/userProfile");
+profileButton.addEventListener("click", async () => {
+    const response = await fetch("/M00988347/login");
+    const data = await response.json();
+
+    if (data.loggedIn) {
+        showUserProfile();
+        history.pushState({}, "", `/M00988347/userProfile/${data.username}`);
+        await loadUserProfile(data.username, true);  // Always load current user's profile
+    }
 });
 
 const showBox = () => {

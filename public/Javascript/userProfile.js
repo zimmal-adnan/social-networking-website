@@ -1,21 +1,8 @@
-const currentUserUsername = document.getElementById("nav-profile");
-
-currentUserUsername.addEventListener("click", async () => {
-    const response = await fetch("/M00988347/login");
-    const data = await response.json();
-    if (data.loggedIn) {
-        history.pushState({}, "", "/M00988347/userProfile");
-        showUserProfile();
-        await loadUserProfile(data.username, true);
-    }
-});
-
 async function loadUserProfile(username, currentUserProfile) {
     const response = await fetch(`/M00988347/profile/${username}`);
     const data = await response.json();
 
     if (data.success == true) {
-
         if(currentUserProfile){
             const navProfilePicture = document.getElementById("nav-profile");
             navProfilePicture.src = data.profilePicture;
@@ -29,7 +16,13 @@ async function loadUserProfile(username, currentUserProfile) {
 
         const userProfileUsername = document.getElementById("profile-username");
         userProfileUsername.textContent = data.username;
-    
+
+        const followerNumber = document.getElementById("follower-number");
+        const followingNumber = document.getElementById("following-number");
+        
+        followerNumber.textContent = data.followerCount || 0;
+        followingNumber.textContent = data.followingCount || 0;
+        
         const editProfile = document.getElementById("edit-profile");
         const actionButtons = document.getElementById("action-buttons");
 
@@ -40,6 +33,10 @@ async function loadUserProfile(username, currentUserProfile) {
         else {
             editProfile.style.display = "none";
             actionButtons.style.display = "flex";
+    
+            const isFollowing = await checkFollow(username);
+            currentlyFollowing = isFollowing;
+            updateFollowButton();
         }
 
         await loadUserPosts(username); 
@@ -120,9 +117,10 @@ function closePost() {
 
 document.addEventListener("DOMContentLoaded", () => {
     const closeButton = document.getElementById("close-post");
-    closeButton.addEventListener("click", closePost);
+    if (closeButton) {
+        closeButton.addEventListener("click", closePost);
+    }
     
-
     const postOverlay = document.getElementById("post-overlay");
     if (postOverlay) {
         postOverlay.addEventListener("click", (e) => {
@@ -188,9 +186,9 @@ function createPost(postData, username, profilePicture, createdAt) {
 
     const timeDifference = postTimeDifference(createdAt);
 
-    const weatherType = postData.weather?.type || "Sunny";
-    const weatherCelsius = postData.weather?.celsius;
-    const weatherFahrenheit = postData.weather?.fahrenheit;
+    const weatherType = postData.weather.type || "Sunny";
+    const weatherCelsius = postData.weather.celsius;
+    const weatherFahrenheit = postData.weather.fahrenheit;
     const weatherIcon = weatherIcons[weatherType] || "Images/cloudy.png";
 
     let temperatureDisplay = "";
@@ -272,4 +270,80 @@ function createPost(postData, username, profilePicture, createdAt) {
     `;
 
     return post;
+}
+
+
+const followButton = document.getElementById("follow-button");
+let currentlyFollowing = false;
+
+function updateFollowButton(){ 
+    if(currentlyFollowing == true){
+        followButton.innerHTML = `<i class="fa-solid fa-ban"></i> Unfollow`;
+    }
+    else{
+        followButton.innerHTML = `<i class="fa-solid fa-user-plus"></i> Follow`;
+    }
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const followButton = document.getElementById("follow-button");
+    if (followButton) {
+        followButton.addEventListener("click", handleFollowClick);
+    }
+});
+
+async function handleFollowClick() {
+    const path = window.location.pathname; 
+    const usernameFromURL = path.split("/").pop(); 
+    const followingUser = usernameFromURL;
+
+    if(currentlyFollowing == true){
+        const response = await fetch("/M00988347/follow", {
+            method: "DELETE",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({followingUser})
+        });
+        const data = await response.json();
+
+        if (data.success == true) {
+            currentlyFollowing = false;
+            updateFollowButton();
+            await updateFollowerCounts(followingUser);
+        }
+    }
+    else{
+        const response = await fetch("/M00988347/follow", {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({followingUser})
+        });
+        const data = await response.json();
+
+        if (data.success == true) {
+            currentlyFollowing = true;
+            updateFollowButton();
+            await updateFollowerCounts(followingUser);
+        }
+    }
+}
+
+async function updateFollowerCounts(username) {
+    const response = await fetch(`/M00988347/profile/${username}`);
+    const data = await response.json();
+    
+    if (data.success) {
+        const followerNumber = document.getElementById("follower-number");
+        const followingNumber = document.getElementById("following-number");
+        
+        followerNumber.textContent = data.followerCount || 0;
+        followingNumber.textContent = data.followingCount || 0;
+    }
+}
+
+async function checkFollow(followingUser){
+    const response = await fetch(`/M00988347/follow/${followingUser}`);
+    const data = await response.json();
+    console.log(`Follow status for ${followingUser}:`, data.following);
+    return data.following || false;
 }

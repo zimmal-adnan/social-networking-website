@@ -41,7 +41,7 @@ exploreSearch.addEventListener("input", async () => {
     
 });
 
-function searchResults(users, posts){
+async function searchResults(users, posts){
     exploreUsers.innerHTML = "";
     explorePosts.innerHTML = "";
 
@@ -53,10 +53,30 @@ function searchResults(users, posts){
     }
 
     if (posts && posts.length > 0) {
-        posts.forEach(post => {
-            const postCard = createPostCard(post);
-            explorePosts.appendChild(postCard);
-        });
+        for (const post of posts) {
+            const response = await fetch(`/M00988347/profile/${post.username}`);
+            const data = await response.json();
+            const profilePicture = data.profilePicture || "/M00988347/Images/profile.jpg";
+
+            const postItem = document.createElement("div");
+            postItem.className = "post-item";
+
+            const timeDifference = postTimeDifference(new Date(post.createdAt));
+
+            postItem.innerHTML = `
+                <h3 class="timestamp">Posted ${timeDifference}</h3>
+                <img src="${post.image}" alt="Post">
+                <p class="post-caption-heading">${post.title || "Untitled"}</p>
+                <p class="post-caption">${post.caption || ""}</p>
+            `;
+
+            postItem.addEventListener("click", () => {
+                const createdAt = new Date(post.createdAt);
+                openPost(post, post.username, profilePicture, createdAt);
+            });
+
+            explorePosts.appendChild(postItem);
+        }
     }
 
     if ((!users || users.length === 0) && (!posts || posts.length === 0)) {
@@ -92,51 +112,17 @@ function createUserCard(user) {
             showUserProfile();
         }
     });
-
     return userCard;
 }
 
 
-function createPostCard(post) {
-    const postCard = document.createElement("div");
-    postCard.className = "user-post";
-    
-    postCard.innerHTML = `
-        <div class="explore-post-image">
-            <div class="upper-section">
-                <div class="upper-left">
-                    <img src="Images/profile.jpg" class="post-profile-picture">
-                    <h4 class="post-username">${post.username}</h4>
-                </div>
-                <h5 class="post-time">Posted ${postTimeDifference(post.createdAt)}</h5>
-            </div>
+async function createExplorePost(postData){
+    const username = postData.username;
+    const response = await fetch(`/M00988347/profile/${username}`);
+    const data = await response.json();
+    const profilePicture = data.profilePicture || "/M00988347/Images/profile.jpg";
 
-            <div class="image-wrapper">
-                <img src="${post.image}" class="image">
-                <section class="react">
-                    <span class="reaction" title="Already Went!">✅</span>
-                    <span class="reaction" title="Love it!">⭐</span>
-                    <span class="reaction" title="Going Soon!">✈️</span>
-                    <span class="reaction" title="Planning on Going!">📌</span>
-                </section>
-            </div>
+    const createdAt = new Date(postData.createdAt);
 
-            <div class="bottom-section">
-                <div class="bottom-top">
-                    <div class="post-location-wrapper">
-                        <i class="fa-solid fa-location-dot"></i>
-                        <h2 class="post-location">${post.postLocation}</h2>
-                    </div>
-                    <div class="post-weather-wrapper">
-                        <h2 class="post-weather">${post.weather || 'N/A'}</h2>
-                        <img src="Images/cloudy.png" class="post-weather-image">
-                    </div>
-                </div>
-                <h2 class="post-budget">Budget: ${post.budget || 'N/A'}</h2>
-            </div>
-        </div>
-    `;
-
-    return postCard;
+    return createPost(postData, username, profilePicture, createdAt);
 }
-

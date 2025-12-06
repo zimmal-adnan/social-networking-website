@@ -45,10 +45,11 @@ function showAuthentication() {
     authSection.style.display = "flex";   
 }
 
-function showFeed() {
+async function showFeed() {
     hideAllSections();
     feedSection.style.display = "block";
     mainAppSection.style.display = "block";
+    await loadFeed();
 }
 
 function showExplore() {
@@ -63,10 +64,11 @@ function showCreatePost() {
     mainAppSection.style.display = "block";
 }
 
-function showMessages(){
+async function showMessages(){
     hideAllSections();
     messageSection.style.display = "block";
     mainAppSection.style.display = "block";
+    await loadConversations();
 }
 
 function showTravelPlanner(){
@@ -117,7 +119,7 @@ navMessages.addEventListener("click", () => {
     history.pushState({}, "", "/M00988347/message");
 });
 
-navFeed.addEventListener("click", () => {
+navFeed.addEventListener("click", async () => {
     showFeed();
     history.pushState({}, "", "/M00988347/feed");
 });

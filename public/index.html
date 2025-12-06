@@ -24,6 +24,8 @@
         <script src="Javascript/createPost.js" defer></script>
         <script src="Javascript/explore.js" defer></script>
         <script src="Javascript/userProfile.js" defer></script>
+        <script src="Javascript/feed.js" defer></script>
+        <script src="Javascript/messaging.js" defer></script>
 
     </head>
     <body>
@@ -252,89 +254,8 @@
                     <h2>See What Your Friends Are Up to!</h2>
                 </header>
 
-                <div class = "feed-posts">
-                    <div class="post">
-                        <div class="user-post">
-                            <div class="post-image">
-                                <div class="upper-section">
-                                    <div class="upper-left">
-                                        <img src="Images/profile.jpg" class="post-profile-picture">
-                                        <h4 class="post-username" id = "post-username">Hi</h4>
-                                    </div>
-                                    <h5 class="post-time">Posted 2 hrs ago</h5>
-                                </div>
-                                <div class="image-wrapper">
-                                    <img src="Images/indexImages/Space.jpg" class="image">
-                                    <section class="react">
-                                        <span class = "reaction" title = "Already Went!">✅</span>
-                                        <span class = "reaction" title = "Love it!">⭐</span>
-                                        <span class = "reaction" title = "Going Soon!">✈️</span>
-                                        <span class = "reaction" title = "Planning on Going!">📌</span>
-                                    </section>
-                                </div>
-                                <div class="bottom-section">
-                                    <div class="bottom-top">
-                                        <div class="post-location-wrapper">
-                                            <i class="fa-solid fa-location-dot"></i>
-                                            <h2 class="post-location">Cape Town, South Africa</h2>
-                                        </div>
-                                        <div class="post-weather-wrapper">
-                                            <h2 class="post-weather">Partly Cloudy <span class="post-temperature">24°C</span></h2>
-                                            <img src="Images/cloudy.png" class="post-weather-image">
-                                        </div>
-                                    </div>
-                                    <h2 class="post-budget">Budget: $6k - $10k</h2>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="post-description">
-                            <div class="triangle"></div>
-                            <div class="post-caption">
-                                <div class="post-caption-wrapper">
-                                    <h2 class="caption-title">Scenery in South Africa</h2>
-                                    <h4 class="caption-writer">By LoveTravel6262</h4>
-                                    <h3 class="caption">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. #LoveLife #Amazing #WOW</h3>
-                                </div>
-                            </div>
-
-                            <div class="comments">
-                                <h2 class="comment-title">COMMENTS</h2>
-                                <div class="user-comments">
-                                    <div class="comment-wrapper">
-                                        <div class="comment-user-description">
-                                            <img src="Images/profile.jpg">
-                                            <div class="comment-user-text">
-                                                <h3 class="comment-username">CuriousTraveler12</h3>
-                                                <h4 class="comment-time">11:07 25/09/2025</h4>
-                                            </div>
-                                            <i class="fa-solid fa-question"></i>
-                                        </div>
-                                        <h2 class="comment">Hey, what are some good cafeterias around here?</h2>
-                                        <div class="comment-interaction">
-                                            <i class="fa-regular fa-heart"></i>
-                                            <i class="fa-regular fa-comment"></i>
-                                            <i class="fa-regular fa-bookmark"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="add-comment">
-                                <input class="post-comment" placeholder="Add comment...">
-                                <div class="add-comment-actions">
-                                    <button class="add-comment-element"><i class="fa-regular fa-face-smile-beam"></i></button>
-                                    <button class="add-comment-element"><i class="fa-solid fa-camera"></i></button>
-                                    <button class="add-comment-button"><i class="fa-solid fa-play"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class = "feed-posts" id = "feed-posts">
                 </div>
-                
-
-
-
             </section>
 
 
@@ -405,15 +326,15 @@
                                     
                                     <div class = "budget-input-group">
                                         <select id="budget-currency" class="budget-currency">
-                                            <option value="USD">$</option>
-                                            <option value="EUR">€</option>
-                                            <option value="GBP">£</option>
-                                            <option value="JPY">¥</option>
-                                            <option value="INR">₹ </option>
-                                            <option value="CAD">$</option>
-                                            <option value="AUD">$</option>
-                                            <option value="CNY">¥</option>
-                                            <option value="KRW">₩</option>
+                                            <option value="USD">$ USD</option>
+                                            <option value="EUR">€ EUR</option>
+                                            <option value="GBP">£ GBP</option>
+                                            <option value="JPY">¥ JPY</option>
+                                            <option value="INR">₹ INR</option>
+                                            <option value="CAD">$ CAD</option>
+                                            <option value="AUD">$ AUD</option>
+                                            <option value="CNY">¥CNY</option>
+                                            <option value="KRW">₩ KRW</option>
                                         </select>
 
                                         <input class="budget-input" id = "budget-min" type="number" min="0" max="9" step="1" placeholder="From...">
@@ -485,7 +406,7 @@
                     <aside class="chat-list">
 
                         <div style="position: relative;">
-                            <input class="search-friends" placeholder="Search Friends...">
+                            <input id = "search-friends" class="search-friends" placeholder="Search Friends...">
                         </div>
 
                         <div class="search-filter">
@@ -493,75 +414,28 @@
                             <i class="fa-solid fa-angle-down"></i>
                         </div>
 
-                        <div class="friends-list">
-                            <div class="friends">
-                                <img src="Images/profile.jpg" alt="Profile">
-                                <div>
-                                    <h2 class="username">CuriousTraveler12</h2>
-                                    <h5 class="message-brief">Lorem ipsum dolor sit amet, c...</h5>
-                                </div>
-                            </div>
-                            
-                            <div class="friends">
-                                <img src="Images/profile.jpg" alt="Profile">
-                                <div>
-                                    <h2 class="username">CuriousTraveler12</h2>
-                                    <h5 class="message-brief">Lorem ipsum dolor sit amet, c...</h5>
-                                </div>
-                            </div>
-
-                            <div class="friends">
-                                <img src="Images/profile.jpg" alt="Profile">
-                                <div>
-                                    <h2 class="username">CuriousTraveler12</h2>
-                                    <h5 class="message-brief">Lorem ipsum dolor sit amet, c...</h5>
-                                </div>
-                            </div>
+                        <div class="friends-list" id = "friends-list">
                         </div>
                     </aside>
 
                     <section class="message-box">
                         <div class="message-friend">
                             <img src="Images/profile.jpg" alt="Profile">
-                            <h2 class="message-username">CuriousTraveler12</h2>
-                        </div>
-                        
-                        <div class="friend-distance">
-                            <h3>CuriousTraveler12</h3>
-                            <section class = "distance-wrapper">
-                                <hr class = "arrow-hr">
-                                <h5 class="distance">You and CuriousTraveler12 are 289km away from each other</h5>
-                            </section>
-                            <h3>You</h3>
+                            <h2 class="message-username"></h2>
                         </div>
 
-                        <div class="chat-messages">
-                  
+                        <div class="chat-messages" id = "chat-messages">  
                             <div class="message received">
-                                <img src="Images/profile.jpg" alt="Profile">
-                                <div class="message-content">
-                                    <div class="message-bubble">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                                    </div>
-                                    <span class="message-time">11:39</span>
-                                </div>
                             </div>
 
                             <div class="message sent">
-                                <img src="Images/profile.jpg" alt="Profile">
-                                <div class="message-content">
-                                    <div class="message-bubble">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo i
-                                    </div>
-                                    <span class="message-time">Seen 11:40</span>
-                                </div>
                             </div>
                         </div>
 
                         <div class="message-input">
                             <div class="input-wrapper">
-                                <input type="text" class="add-message" placeholder="Type something...">
-                                <button class="send-message-button"><i class="fa-solid fa-play"></i></button>
+                                <input type="text" id = "add-message" class="add-message" id = "add-message" placeholder="Type something...">
+                                <button id = "send-message-button" class="send-message-button"><i class="fa-solid fa-play"></i></button>
                                 <div class="message-icons">
                                     <i class="fa-solid fa-location-dot"></i>
                                     <i class="fa-regular fa-face-smile"></i>
@@ -750,10 +624,11 @@
                                         <i class="fa-solid fa-user-plus"></i>
                                         Follow
                                     </button>
-                                    <button class="message-button">
+                                    <button class="message-button" id = "message-button">
                                         <i class="fa-regular fa-comment-dots"></i>
                                         Message
                                     </button>
+
                                 </div>
 
                                 <div class="edit-profile" id="edit-profile">
@@ -766,7 +641,7 @@
                         </div>
 
                         <div class="user-bio" id = "user-bio">
-                            <p></p>
+                            <p class = "bio" id = "bio"></p>
                         </div>
                     </section>
 
@@ -783,9 +658,23 @@
                         </div>
                     </section>
 
-                    <div class="post-overlay" id="post-overlay">
-                        <div class="post-content">
-                            <button class="close-post" id="close-post">&times;</button>
+                    <div id="edit-profile-overlay" class="edit-profile-overlay">
+                        <div class="edit-profile-content">
+                            <h2 class = "edit-profile-title">Edit Profile</h2>
+
+                            <div class="edit-profile-picture-section">
+                                <img id="edit-profile-preview" src="Images/profile.jpg" class="edit-profile-preview">
+                                <button id="change-profile-picture-button" class = "change-profile-picture-button">Change Profile Picture</button>
+                                <input type="file" id="edit-profile-input-file" accept="image/jpeg,image/png" style="display: none;">
+                            </div>
+
+                            <textarea id="edit-bio-input" class = "edit-bio-input" placeholder="Write your bio..."></textarea>
+
+                            <div class = "edit-profile-action-buttons">
+                                <button id="save-profile-button" class = "save-profile-button">Save</button>
+                                <button id="close-profile-button" class = "close-profile-button">Cancel</button>
+                            </div>
+                            
                         </div>
                     </div>
 
@@ -793,6 +682,13 @@
             </section>
 
         </section>
+
+        <div class="post-overlay" id="post-overlay">
+            <div class="post-content">
+                <button class="close-post" id="close-post">&times;</button>
+            </div>
+        </div>
+
 
 
     </body>

@@ -200,10 +200,8 @@ signupRegistrationButton.addEventListener("click", async () => {
             const uploadData = await uploadResponse.json();
             
             if (uploadData.success == true) {
-                alert('Registration successful with profile picture!');
-            } else {
-                alert('Registration successful but profile picture upload failed: ' + uploadData.message);
-            }
+                alert('Successful with profile picture');
+            } 
         } 
 
         await loadUserProfile(username, true);

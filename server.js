@@ -6,6 +6,7 @@ import path from "path";
 import multer from "multer";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { WebSocketServer } from "ws";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,7 +15,7 @@ const app = express();
 
 const uploadsFolder = path.join(__dirname, "public", "uploads");
 if (!fs.existsSync(uploadsFolder)) {
-    fs.mkdirSync(uploadsFolder, { recursive: true });
+    fs.mkdirSync(uploadsFolder, {recursive: true});
 }
 
 const storage = multer.diskStorage({
@@ -38,6 +39,8 @@ app.use(expressSession({
     saveUninitialized: true,
     cookie: {secure: false}
 }));
+
+const wsClients = new Map();
 
 
 //registering
@@ -139,6 +142,14 @@ app.get("/M00988347/login", async (request, response) => {
 
 //logging out
 app.delete("/M00988347/login", async (request, response) => {
+    const username = request.session.user.username;
+
+    if (username && wsClients.has(username)) {
+        const ws = wsClients.get(username);
+        ws.close();
+        wsClients.delete(username);
+    }
+    
     request.session.destroy();
     response.json({success: true, message: "Logged out"});
 });
@@ -158,12 +169,25 @@ app.post("/M00988347/uploadProfilePicture", upload.single('profilePicture'), asy
     const db = await connectToDatabase();
     const users = db.collection("users");
         
-    await users.updateOne(
-        {username},
-        {$set: {profilePicture: filePath}}
-    );
+    await users.updateOne({username}, {$set: {profilePicture: filePath}});
     
     response.json({success: true, filePath, message: "Profile picture uploaded"});
+})
+
+app.put("/M00988347/profile/update", async (request, response) => {
+    if (!request.session.user) {
+        return response.json({success: false, message: "You must be logged in to edit your profile"});
+    }
+
+    const username = request.session.user.username;
+    const {bio} = request.body;
+
+    const db = await connectToDatabase();
+    const users = db.collection("users");
+
+    await users.updateOne({ username },{ $set: { bio: bio || "" } });
+
+    response.json({success: true, message: "Profile updated successfully"});
 })
 
 //get user details
@@ -184,6 +208,7 @@ app.get("/M00988347/profile/:username", async (request, response) => {
         username: user.username,
         email: user.email,
         profilePicture: user.profilePicture || '/M00988347/Images/profile.jpg',
+        bio: user.bio || "",
         followerCount,
         followingCount
     });
@@ -272,14 +297,61 @@ app.get("/M00988347/contents", async (request, response) => {
 
     const results = await contents.find({
         $or: [
-            {title: {$regex: queryPosts, $options: 'i' } },
-            { caption: { $regex: queryPosts, $options: 'i' } },
-            { postLocation: { $regex: queryPosts, $options: 'i' } }
+            {title: {$regex: queryPosts, $options: 'i'}},
+            {caption: {$regex: queryPosts, $options: 'i'}},
+            {postLocation: {$regex: queryPosts, $options: 'i'} }
         ]
-    }).sort({ createdAt: -1 }).toArray();
+    }).sort({createdAt: -1}).toArray();
 
     response.json({success: true, results});
 });
+
+//posting a comment
+app.post("/M00988347/comment", async (request, response) => {
+    if (!request.session.user) {
+        return response.json({success: false, message: "You must be logged in to follow someone"});
+    }
+
+    const {postID, text} = request.body;
+
+    if (!text) {
+        return response.json({success: false, message: "Comment is empty"});
+    }
+
+    const username = request.session.user.username;
+
+    const db = await connectToDatabase();
+    const users = db.collection("users");
+    const comments = db.collection("comments");
+
+    const user = await users.findOne({username});
+
+    const commentData = {
+        postID, 
+        username, 
+        profilePicture: user.profilePicture || "/M00988347/Images/profile.jpg",
+        text,
+        createdAt: new Date()
+    };
+
+    await comments.insertOne(commentData);
+
+    response.json({success: true, comment: commentData});
+})
+
+
+//get comments for a particular post
+app.get("/M00988347/comments/:postID", async (request, response) => {
+    const {postID} = request.params;
+
+    const db = await connectToDatabase();
+    const comments = db.collection("comments");
+
+    const results = await comments.find({postID}).sort({createdAt: -1}).toArray();
+
+    response.json({success: true, comments: results});
+});
+
 
 
 //searching for users
@@ -329,6 +401,8 @@ app.post("/M00988347/follow", async (request, response) => {
     response.json({success: true, message: `You are following ${followingUser}`});
 });
 
+
+//check if a follow for a specific user exists
 app.get("/M00988347/follow/:username", async (request, response) => {
     if (!request.session.user) {
         return response.json({success: false, following: false});
@@ -367,6 +441,123 @@ app.delete("/M00988347/follow", async (request, response) => {
 });
 
 
+//get posts from users you follow
+app.get("/M00988347/feed", async (request, response) => { 
+    if (!request.session.user) {
+        return response.json({success: false, message: "You must be logged in to view your feed"});
+    }
+
+    const followerUser = request.session.user.username;
+    
+    const db = await connectToDatabase();
+    const follows = db.collection("follows");
+    const contents = db.collection("contents");
+
+    const followingList = await follows.find({followerUser}).toArray();
+    const followingUsernames = followingList.map(f => f.followingUser);
+
+    const posts = await contents.find({username: {$in: followingUsernames}}).sort({createdAt: -1}).toArray();
+
+    response.json({success: true, posts});
+})
+
+app.get("/M00988347/conversations", async (request, response) => {
+    if (!request.session.user) {
+        return response.json({success: false, message: "You must be logged in to message"});
+    }
+
+    const username = request.session.user.username;
+
+    const db = await connectToDatabase();
+    const follows = db.collection("follows");
+    const users = db.collection("users"); 
+
+    const following = await follows.find({followerUser: username}).toArray();
+    const followers = await follows.find({followingUser: username}).toArray();
+
+    const followingUsernames = following.map(f => f.followingUser);
+    const followerUsernames = followers.map(f => f.followerUser);
+
+    const mutualFollows = followingUsernames.filter(user => 
+        followerUsernames.includes(user)
+    );
+
+    const conversations = [];
+    for (const otherUser of mutualFollows) {
+        const userDetails = await users.findOne({username: otherUser});
+        conversations.push({
+            username: otherUser,
+            profilePicture: userDetails.profilePicture || "/M00988347/Images/profile.jpg"
+        });
+    }
+
+
+    response.json({success: true, conversations});
+    
+})
+
+
+app.get("/M00988347/messages/:receiverUser", async (request, response) => {
+    if (!request.session.user) {
+        return response.json({success: false, message: "You must be logged in"});
+    }
+
+    const username = request.session.user.username;
+    const {receiverUser} = request.params;
+
+    const db = await connectToDatabase();
+    const messages = db.collection("messages");
+    const follows = db.collection("follows");
+
+    const senderFollowing = await follows.findOne({followerUser: username, followingUser: receiverUser});
+    const receiverFollowing = await follows.findOne({followerUser: receiverUser, followingUser: username});
+
+    if(!senderFollowing || !receiverFollowing){
+        return response.json({success: false, message: "You can only message friends"});
+    }
+    
+    const messageList = await messages.find({
+        $or: [
+            {sender: username, receiver: receiverUser},
+            {sender: receiverUser, receiver: username}
+        ]
+    }).sort({timestamp: 1}).toArray();
+
+
+    response.json({success: true, messages: messageList});
+});
+
+app.post("/M00988347/messages", async (request, response) => {
+    if (!request.session.user) {
+        return response.json({success: false, message: "You must be logged in"});
+    }
+    
+    const {receiver, content} = request.body;
+    const sender = request.session.user.username;
+
+    const db = await connectToDatabase();
+    const follows = db.collection("follows");
+    const messages = db.collection("messages");
+
+    const senderFollowing = await follows.findOne({followerUser: sender, followingUser: receiver});
+    const receiverFollowing = await follows.findOne({followerUser: receiver, followingUser: sender});
+
+    if(!senderFollowing || !receiverFollowing){
+        return response.json({success: false, message: "You can only message friends"});
+    }
+
+    const messageData = {
+        sender,
+        receiver,
+        content,
+        timestamp: new Date()
+    }
+
+    await messages.insertOne(messageData);
+
+    response.json({success: true, message: messageData});
+});
+
 
 app.use('/M00988347', express.static(path.join(__dirname, 'public')));
 
@@ -375,6 +566,41 @@ app.get('/M00988347/*splat', (request, response) => {
 });
 
 
-app.listen(3000, () => {
+const server = app.listen(3000, () => {
     console.log("Listening on port 3000");
 });
+
+/*const wss = WebSocketServer({server});
+
+wss.on("connection", (ws, request) => {
+    console.log("New connection");
+
+    sessionParser(request, {}, () => {
+        const session = request.session;
+
+        if (!session || !session.user) {
+            ws.close(1008, 'Unauthorized');
+            return;
+        }
+
+        const username = session.user.username;
+        wsClients.set(username, ws);
+        console.log(`User ${username} connected via WebSocket`);
+
+        ws.send(JSON.stringify({type: "connected", username}))
+
+        ws.on("message", async (data) => {
+            const {receiver, content} = message;
+            const sender = username;
+
+            const db = await connectToDatabase();
+            const follows = db.collection("follows");
+            const messages = db.collection("messages");
+
+            const senderFollowing = await follows.findOne({followerUser: sender, followingUser: receiver});
+            const receiverFollowing = await follows.findOne({followerUser: receiver, followingUser: sender});
+
+        })
+    })
+
+})*/

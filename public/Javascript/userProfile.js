@@ -22,13 +22,18 @@ async function loadUserProfile(username, currentUserProfile) {
         
         followerNumber.textContent = data.followerCount || 0;
         followingNumber.textContent = data.followingCount || 0;
-        
+
+        const bioText = document.getElementById("bio");
+        bioText.textContent = data.bio || "";
+
         const editProfile = document.getElementById("edit-profile");
         const actionButtons = document.getElementById("action-buttons");
 
         if (currentUserProfile == true) {
             editProfile.style.display = "flex";
-            actionButtons.style.display = "none";
+            actionButtons.style.display = "none"; 
+
+            openEditProfile();
         } 
         else {
             editProfile.style.display = "none";
@@ -73,7 +78,7 @@ async function loadUserPosts(username){
             `;
 
             postItem.addEventListener("click", () => {
-                openPost(post, username, profilePicture);
+                openPost(post, username, profilePicture, new Date(post.createdAt));
             });
 
             postsGrid.appendChild(postItem);
@@ -88,188 +93,6 @@ async function loadUserPosts(username){
     if (postNumber) {
         postNumber.textContent = postCount;
     }
-}
-
-function openPost(postData, username, profilePicture) {
-    const postOverlay = document.getElementById("post-overlay");
-    const postContent = postOverlay.querySelector(".post-content");
-    
-    const existingPost = postContent.querySelector(".post");
-    if (existingPost) {
-        existingPost.remove();
-    }
-
-    const postElement = createPost(postData, username, profilePicture, new Date(postData.createdAt));
-
-    const closeButton = postContent.querySelector(".close-post");
-    closeButton.after(postElement);
-
-    postOverlay.classList.add("active");
-    document.body.style.overflow = "hidden";
-}
-
-function closePost() {
-    const postOverlay = document.getElementById("post-overlay");
-    postOverlay.classList.remove("active");
-    document.body.style.overflow = "auto";
-}
-
-
-document.addEventListener("DOMContentLoaded", () => {
-    const closeButton = document.getElementById("close-post");
-    if (closeButton) {
-        closeButton.addEventListener("click", closePost);
-    }
-    
-    const postOverlay = document.getElementById("post-overlay");
-    if (postOverlay) {
-        postOverlay.addEventListener("click", (e) => {
-            if (e.target.id === "post-overlay") {
-                closePost();
-            }
-        });
-    }
-});
-
-
-function postTimeDifference(postDate){
-    const nowTime = new Date();
-    const difference = nowTime - postDate;
-
-    const seconds = Math.floor(difference / 1000);
-    if (seconds < 60) {
-        return `${seconds} seconds ago`;
-    }
-
-    const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) {
-        return `${minutes} minutes ago`;
-    }
-
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) {
-        return `${hours} hours ago`;
-    }
-
-    const days = Math.floor(hours / 24);
-    if (days < 30) { 
-        return `${days} days ago`;
-    }
-
-    const months = Math.floor(days / 30); 
-    if (months < 12) {
-        return `${months} months ago`;
-    }
-
-    const years = Math.floor(months / 12);
-    return `${years} years ago`;
-}
-
-
-
-const weatherIcons = {
-    "Sunny": "Images/sunny.png",
-    "Partly Cloudy": "Images/cloudy.png",
-    "Cloudy": "Images/cloudy.png",
-    "Light Rain": "Images/rainy.png",
-    "Heavy Rain": "Images/rainy.png",
-    "Thunder": "Images/thunder.png",
-    "Hail": "Images/hail.png",
-    "Snow": "Images/snowy.png",
-    "Foggy": "Images/foggy.png",
-    "Windy": "Images/windy.png"
-};
-
-function createPost(postData, username, profilePicture, createdAt) {
-    const post = document.createElement("div");
-    post.className = "post";
-
-    const timeDifference = postTimeDifference(createdAt);
-
-    const weatherType = postData.weather.type || "Sunny";
-    const weatherCelsius = postData.weather.celsius;
-    const weatherFahrenheit = postData.weather.fahrenheit;
-    const weatherIcon = weatherIcons[weatherType] || "Images/cloudy.png";
-
-    let temperatureDisplay = "";
-    if (weatherCelsius) {
-        temperatureDisplay = `${weatherCelsius}°C`;
-    } else if (weatherFahrenheit) {
-        temperatureDisplay = `${weatherFahrenheit}°F`;
-    }
-
-    const currency = postData.budget.currency || "$";
-    const budgetMin = postData.budget.min;
-    const budgetMax = postData.budget.max;
-    
-    let budgetDisplay = "";
-    budgetDisplay = `Budget: ${currency}${budgetMin}k - ${currency}${budgetMax}k`;
-   
-
-    post.innerHTML = `
-        <div class="user-post">
-            <div class="post-image">
-                <div class="upper-section">
-                    <div class="upper-left">
-                        <img src="${profilePicture}" class="post-profile-picture">
-                        <h4 class="post-username">${username}</h4>
-                    </div>
-                    <h5 class="post-time">Posted ${timeDifference}</h5>
-                </div>
-                <div class="image-wrapper">
-                    <img src="${postData.image}" class="image">
-                    <section class="react">
-                        <span class="reaction" title="Already Went!">✅</span>
-                        <span class="reaction" title="Love it!">⭐</span>
-                        <span class="reaction" title="Going Soon!">✈️</span>
-                        <span class="reaction" title="Planning on Going!">📌</span>
-                    </section>
-                </div>
-                <div class="bottom-section">
-                    <div class="bottom-top">
-                        <div class="post-location-wrapper">
-                            <i class="fa-solid fa-location-dot"></i>
-                            <h2 class="post-location">${postData.postLocation}</h2>
-                        </div>
-                        <div class="post-weather-wrapper">
-                            <h2 class="post-weather">${weatherType} <span class="post-temperature">${temperatureDisplay}</span></h2>
-                            <img src="${weatherIcon}" class="post-weather-image">
-                        </div>
-                    </div>
-                    <h2 class="post-budget">${budgetDisplay}</h2>
-                </div>
-            </div>
-        </div>
-
-        <div class="post-description">
-            <div class="triangle"></div>
-            <div class="post-caption">
-                <div class="post-caption-wrapper">
-                    <h2 class="caption-title">${postData.title || "Untitled"}</h2>
-                    <h4 class="caption-writer">By ${username}</h4>
-                    <h3 class="caption">${postData.caption || "No caption provided"}</h3>
-                </div>
-            </div>
-
-            <div class="comments">
-                <h2 class="comment-title">COMMENTS</h2>
-                <div class="user-comments">
-                    <!-- Comments will be loaded here -->
-                </div>
-            </div>
-
-            <div class="add-comment">
-                <input class="post-comment" placeholder="Add comment...">
-                <div class="add-comment-actions">
-                    <button class="add-comment-element"><i class="fa-regular fa-face-smile-beam"></i></button>
-                    <button class="add-comment-element"><i class="fa-solid fa-camera"></i></button>
-                    <button class="add-comment-button"><i class="fa-solid fa-play"></i></button>
-                </div>
-            </div>
-        </div>
-    `;
-
-    return post;
 }
 
 
@@ -288,9 +111,7 @@ function updateFollowButton(){
 
 document.addEventListener("DOMContentLoaded", () => {
     const followButton = document.getElementById("follow-button");
-    if (followButton) {
-        followButton.addEventListener("click", handleFollowClick);
-    }
+    followButton.addEventListener("click", handleFollowClick); 
 });
 
 async function handleFollowClick() {
@@ -344,6 +165,118 @@ async function updateFollowerCounts(username) {
 async function checkFollow(followingUser){
     const response = await fetch(`/M00988347/follow/${followingUser}`);
     const data = await response.json();
-    console.log(`Follow status for ${followingUser}:`, data.following);
+
     return data.following || false;
 }
+
+
+function openEditProfile(){
+    const editProfileButton = document.getElementById("edit-profile-button");
+    const editProfileOverlay = document.getElementById("edit-profile-overlay");
+    const editBioInput = document.getElementById("edit-bio-input");
+    const bioText = document.getElementById("bio");
+    const closeProfileButton = document.getElementById("close-profile-button");
+    const saveProfileButton = document.getElementById("save-profile-button");
+
+    let newProfilePictureFile = null;
+
+    editProfileButton.onclick = () => {
+        editBioInput.value = bioText.textContent || "";
+        editPicturePreview.src = mainProfileImage.src;
+        editProfileOverlay.classList.add("active");
+        document.body.style.overflow = "hidden";
+    };
+
+    closeProfileButton.onclick = () => {
+        editProfileOverlay.classList.remove("active");
+        document.body.style.overflow = "auto";
+        newProfilePictureFile = null;
+    };
+
+
+    const changePicButton = document.getElementById("change-profile-picture-button");
+    const editPictureInput = document.getElementById("edit-profile-input-file");
+    const editPicturePreview = document.getElementById("edit-profile-preview");
+    const mainProfileImage = document.getElementById("profile-image"); 
+    const navProfileImage = document.getElementById("nav-profile");  
+
+
+    changePicButton.onclick = () => {
+        editPictureInput.click();
+    }
+
+    editPictureInput.onchange = () => {
+        const file = editPictureInput.files[0];
+        if (file) {
+            newProfilePictureFile = file;
+            const reader = new FileReader();
+            reader.onload = e => editPicturePreview.src = e.target.result;
+            reader.readAsDataURL(file);
+        }
+    };
+
+
+    saveProfileButton.onclick = async () => {
+        const newBio = editBioInput.value;
+        const currentUsername = document.getElementById("profile-username").textContent;
+
+        if(newProfilePictureFile){
+            const form = new FormData();
+            form.append("profilePicture", newProfilePictureFile);
+            form.append("username", currentUsername);
+
+            const uploadResponse = await fetch("/M00988347/uploadProfilePicture", {
+                method: "POST",
+                body: form
+            });
+
+            const uploadData = await uploadResponse.json();
+
+            if (uploadData.success) {
+                mainProfileImage.src = uploadData.filePath;
+                navProfileImage.src = uploadData.filePath;
+                editPicturePreview.src = uploadData.filePath;
+            }
+        }
+
+        const response = await fetch("/M00988347/profile/update", {
+            method: "PUT",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({bio: newBio})
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            bioText.textContent = newBio;
+            editProfileOverlay.classList.remove("active");
+            document.body.style.overflow = "auto";
+            newProfilePictureFile = null;
+        } 
+        else {
+            alert("Error updating profile");
+        }
+    };
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const messageButton = document.getElementById("message-button");
+    
+    if(messageButton){
+        messageButton.addEventListener("click", async () => {
+            const username = document.getElementById("profile-username").textContent;
+            
+            const response = await fetch(`/M00988347/messages/${username}`);
+            const data = await checkResponse.json();
+
+            if (!checkData.success) {
+                alert(checkData.message);
+                return;
+            }
+
+            showMessages();
+            history.pushState({}, "", "/M00988347/message");
+            await loadChat(username);
+        });
+    }
+});

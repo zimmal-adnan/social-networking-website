@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang = "en">
     <head>
+        <base href="/M00988347/">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Trailblaze</title>
+
+
 
         <link rel="stylesheet" href="CSS/index.css">
         <link rel="stylesheet" href="CSS/signup.css">
@@ -18,6 +21,10 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
         <script src="https://kit.fontawesome.com/4fc40ea9d1.js" crossorigin="anonymous"></script>
 
+        <link rel="stylesheet" href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.21.0/maps/maps.css">
+        <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.21.0/maps/maps-web.min.js"></script>
+
+
         <script src="Javascript/authentication.js" defer></script>
         <script src="Javascript/index.js" defer></script>
         <script src="Javascript/route.js" defer></script>
@@ -26,6 +33,9 @@
         <script src="Javascript/userProfile.js" defer></script>
         <script src="Javascript/feed.js" defer></script>
         <script src="Javascript/messaging.js" defer></script>
+        <script src="Javascript/chatbot.js" defer></script>
+        <script src="Javascript/weatherAPI.js" defer></script>
+        <script src="Javascript/mapIntegration.js" defer></script>
 
     </head>
     <body>
@@ -43,7 +53,7 @@
            <button id="to-login" class = "to-login-button">GET STARTED →</button>
 
             <div class="orbit">
-                <img src="Images/indexImages/Earth.png" class="earth">
+                <img src="Images/Earth.png" class="earth">
             </div>
         </section>
 
@@ -51,15 +61,15 @@
         <section id = "authentication-section" class = "page-section">
             <div class = "background-slideshow">
                 <div class = "first-image">
-                    <img src = "Images/AmalfiCoast.jpg" class = "slide active">
+                    <img src = "Images/AmalfiCoast.jpg" class = "backgroundSlide active">
                     <h2 class = "location-name">Background image from Amalfi Coast, Italy</h2>
                 </div>
                 <div class = "second-image">
-                    <img src = "Images/MountRainier.jpg" class = "slide">
+                    <img src = "Images/MountRainier.jpg" class = "backgroundSlide">
                     <h2 class = "location-name">Background image from Mount Rainier, Washington</h2>
                 </div>
                 <div class = "third-image">
-                    <img src = "Images/GlacierNational.jpg" class = "slide">
+                    <img src = "Images/GlacierNational.jpg" class = "backgroundSlide">
                     <h2 class = "location-name">Background image from Glacier National Park, Montana</h2>
                 </div>
             </div>
@@ -247,6 +257,41 @@
                     
                 </div>
             </nav>
+
+            <button class = "chatbot" id = "chatbot">
+                <i class="fa-solid fa-comment-dots"></i>
+            </button>
+
+            <div class = "chatbot-box" id = "chatbot-box">
+                <div class="chatbot-header">
+                    <div class="chatbot-header-left">
+                        <h3>TrailBot</h3>
+                        <p>Ask TrailBot about your next adventure!</p>
+                    </div>
+                    <button class="chatbot-close" id="chatbot-close">
+                        <i class="fa-solid fa-x"></i>
+                    </button>
+                </div>
+
+                <div class="chatbot-messages" id="chatbot-messages">
+                    <div class="chatbot-message bot-message">
+                        <div class="chat-profile">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <p>Hello! I'm your travel assistant. How can I help?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chatbot-input-container">
+                    <input id="chatbot-input" class="chatbot-input" placeholder="Ask me anything about travel...">
+                    <button class="chatbot-send" id="chatbot-send">
+                        <i class="fa-solid fa-play"></i>
+                    </button>
+                </div>
+
+            </div> 
             
             <section id="feed-section" class="page-section" style="display: none;">
                 <header id = "feed-header">
@@ -263,19 +308,29 @@
             <section id="explore-section" class="page-section" style="display: none;">
                 <header class = "explore-header" id = "explore-header">
                     <h1 class = "explore-title">EXPLORE</h1>
-                    
                 </header>
 
                 <main class = explore-main>
                     <div class="map-pin" id = "map-pin">
-                        <h2 id = "map-pin-h2">Pin A Location <br> Travel The World!</h2>
-                        <img src="Images/indexImages/Space.jpg">
+                        <h2 id = "map-pin-h2">Pin A Location, Travel The World</h2>
+                        <img src="Images/Space.jpg">
                         <button class="close-map" id = "close-map">
                             <i class="fa-solid fa-angle-left"></i>
                         </button>
                     </div>
 
                     <div class="explore" id = "explore">
+                        <div class="explore-tabs">
+                            <button class="explore-tab active" id="tab-posts">
+                                <i class="fa-solid fa-image"></i>
+                                Posts
+                            </button>
+                            <button class="explore-tab" id="tab-users">
+                                <i class="fa-solid fa-users"></i>
+                                Users
+                            </button>
+                        </div>
+
                         <div class="search-bar">
                             <input id = "explore-search" class="search" placeholder="Looking for something/someone specific?">
                             <i class="fa-solid fa-magnifying-glass"></i>
@@ -286,7 +341,7 @@
                             <i class="fa-solid fa-angle-down"></i>
                         </div>
 
-                        <div class = "explore-users" id = "explore-users">
+                        <div class = "explore-users" id = "explore-users" style = "display: none;">
                         </div>
 
                         <div class="explore-posts" id = "explore-posts">
@@ -308,19 +363,30 @@
                     <div class = "create-post">
                         <div class="post-and-caption">
                             <div class="post-input">
-                                <img src="Images/indexImages/Space.jpg" class="post-picture" alt="Post Preview" id="preview-image">
-                                <input id="input-file" type="file" accept="image/jpeg, image/png, image/jpg"> 
+                                
+                                <div class="post-slider" id = post-slider>                        
+                                    <img src = "Images/EmptyPost.jpg" class = "post-slide">
+                                </div>
+                                <br>
+
+                                <div class = "dot-container" style="text-align: center;">
+                                </div>
+
+                                
+                                <input id="input-file" type="file" accept="image/jpeg, image/png, image/jpg" multiple> 
                                 <button class="upload-post" id="upload-post" type="button">
                                     <i class="fa-solid fa-circle-chevron-up"></i>
                                     Upload Picture(s)
                                 </button>
+                                <p class="error" id="error-post-image"></p>
                             </div>
 
                             <div class="caption-input">
-                                <input class="add-caption-title" id = "add-caption-title" placeholder = "Add title..." maxlength = "35">                    
+                                <input class="add-caption-title" id = "add-caption-title" placeholder = "Add title..." maxlength = "35">
+
                                 <textarea class="add-caption" id = "caption" placeholder="Write your caption here..."></textarea>
                                 <div class="caption-counter" id="caption-counter"><span id = "word-count">0</span> / 100 words</div>
-                                
+
                                 <div class = "budget-container">
                                     <label class="budget-label">Budget Range</label>
                                     
@@ -333,7 +399,7 @@
                                             <option value="INR">₹ INR</option>
                                             <option value="CAD">$ CAD</option>
                                             <option value="AUD">$ AUD</option>
-                                            <option value="CNY">¥CNY</option>
+                                            <option value="CNY">¥ CNY</option>
                                             <option value="KRW">₩ KRW</option>
                                         </select>
 
@@ -341,54 +407,61 @@
                                         <hr class = "budget-dash">
                                         <input class="budget-input" id = "budget-max" type="number" min="0" max="9" step="1" placeholder = "To...">
                                     </div>
+                                    <p class="error" id="error-post-budget"></p>
                                 </div>
                             </div>
                         </div>
                     
-                    
                         <div class="location-input">
                             <h2>ADD LOCATION</h2>
-                            <img src="Images/indexImages/Space.jpg" alt="Map">
+                            <div id="create-post-map" id = "create-post-map" class="create-post-map"></div>
 
-                            <div class="location-and-weather">
-                                <div class = "location-container">
-                                    <label class="location-label">Location</label>
-                                    <input id = "location" class="location" type="text" placeholder="Enter location">
+                            <div class = "location-container">
+                                <div class = "location-inputs-row">
+                                    <input id = "location-country" class="location country" type="text" placeholder="Enter country...">
+                                    <input id = "location-city" class="location city" type="text" placeholder="Enter city...">
                                 </div>
-                                
-                                
-                                <div class="weather-container">
-                                    <label class="weather-label">Weather Information</label>
-                                    <div class="weather-inputs-row">
-                                        <div class="weather-field">
-                                            <input class = "weather-input" id="weather-in-celsius" type = "number" min = "-200" max = "200" step = "1">
-                                            <span>°C</span>
-                                        </div>
+                                <button class="get-weather" id = "get-weather">Get Weather</button>
+                                <p class="error" id="error-post-location"></p>
+                            </div>
+                        </div>
 
-                                        <div class="weather-separator"></div>
+                        <div class = "weather-container">
+                            <label class="weather-label">Weather Information</label>
+                            <div class="weather-inputs-row">
+                                <div class="weather-field">
+                                    <input class = "weather-input" id="weather-in-celsius" type = "number" min = "-200" max = "200" step = "1">
+                                    <span>°C</span>
+                                </div>
 
-                                        <div class="weather-field" style = "margin-left: 0.5rem;">
-                                            <input class = "weather-input" id="weather-in-farenheit" type = "number" min = "-500" max = "500" step = "1">
-                                            <span>°F</span>
-                                        </div>
-                
-                                        <div class="weather-type-field">
-                                            <select id="weather-type" class="weather-type">
-                                                <option value="Sunny">☀️ Sunny</option>
-                                                <option value="Partly Cloudy">⛅ Partly Cloudy</option>
-                                                <option value="Cloudy">☁️ Cloudy</option>
-                                                <option value="Light Rain">🌦️ Light Rain</option>
-                                                <option value="Heavy Rain">🌧️ Heavy Rain</option>
-                                                <option value="Thunder">⛈️ Thunder</option>
-                                                <option value="Hail">🌨️ Hail</option>
-                                                <option value="Snow">❄️ Snow</option>
-                                                <option value="Foggy">🌫️ Foggy</option>
-                                                <option value="Windy">💨 Windy</option>
-                                            </select>
-                                        </div>
-                                    </div>    
+                                <div class="weather-separator"></div>
+
+                                <div class="weather-field" style = "margin-left: 0.5rem;">
+                                    <input class = "weather-input" id="weather-in-fahrenheit" type = "number" min = "-500" max = "500" step = "1">
+                                    <span>°F</span>
+                                </div>
+
+                                
+        
+                                <div class="weather-type-field">
+                                    <div class = "weather-icon" id = "weather-icon">
+                                        ☀️
+                                    </div>
+                                    <select id="weather-type" class="weather-type">
+                                        <option value="Clear Sky">Clear Sky</option>
+                                        <option value="Few Clouds">Few Clouds</option>
+                                        <option value="Scattered Clouds">Scattered Clouds</option>
+                                        <option value="Broken Clouds">Broken Clouds</option>
+                                        <option value="Shower Rain">Shower Rain</option>
+                                        <option value="Rain">Rain</option>
+                                        <option value="Thunderstorm">Thunderstorm</option>
+                                        <option value="Snow">Snow</option>
+                                        <option value="Mist">Mist</option>
+                                        <option value="Dust">Dust</option>
+                                    </select>
                                 </div>
                             </div>
+                            <p class="error" id="error-post-weather"></p>  
                         </div>
                     </div>
                     
@@ -420,7 +493,7 @@
 
                     <section class="message-box">
                         <div class="message-friend">
-                            <img src="Images/profile.jpg" alt="Profile">
+                            <img src="Images/profile.jpg" alt="Profile" class = "message-profile">
                             <h2 class="message-username"></h2>
                         </div>
 
@@ -434,7 +507,7 @@
 
                         <div class="message-input">
                             <div class="input-wrapper">
-                                <input type="text" id = "add-message" class="add-message" id = "add-message" placeholder="Type something...">
+                                <input type="text" class="add-message" id = "add-message" placeholder="Type something...">
                                 <button id = "send-message-button" class="send-message-button"><i class="fa-solid fa-play"></i></button>
                                 <div class="message-icons">
                                     <i class="fa-solid fa-location-dot"></i>
@@ -478,7 +551,7 @@
 
                                     <h5 class="post-time">Posted 2 hrs ago</h5>
                                 </div>
-                                <img src="Images/indexImages/Space.jpg" class="card-image">
+                                <img src="Images/Space.jpg" class="card-image">
 
                                 <div class = "bottom-section" style = "margin-top: -1rem;">
                                     <div class="bottom-top">
@@ -685,7 +758,7 @@
 
         <div class="post-overlay" id="post-overlay">
             <div class="post-content">
-                <button class="close-post" id="close-post">&times;</button>
+                <button class="close-post" id="close-post"><i class="fa-solid fa-x"></i></button>
             </div>
         </div>
 

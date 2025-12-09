@@ -21,68 +21,115 @@ closeMapButton.addEventListener("click", () => {
 const exploreSearch = document.getElementById("explore-search");
 const exploreUsers = document.getElementById("explore-users");
 const explorePosts = document.getElementById("explore-posts");
+const tabPosts = document.getElementById("tab-posts");
+const tabUsers = document.getElementById("tab-users");
+
+let currentTab = "posts";
+let allPosts = [];
+
+tabPosts.addEventListener("click", () => {
+    currentTab = "posts";
+    tabPosts.classList.add("active");
+    tabUsers.classList.remove("active");
+    exploreUsers.style.display = "none";
+    explorePosts.style.display = "grid";
+    exploreSearch.placeholder = "Search posts...";
+    exploreSearch.value = "";
+    
+    displayPosts(allPosts);
+});
+
+tabUsers.addEventListener("click", () => {
+    currentTab = "users";
+    tabUsers.classList.add("active");
+    tabPosts.classList.remove("active");
+    explorePosts.style.display = "none";
+    exploreUsers.style.display = "block";
+    exploreSearch.placeholder = "Search users...";
+    exploreSearch.value = "";
+    exploreUsers.innerHTML = "";
+});
+
+async function loadExplorePosts() {
+    const response = await fetch('/M00988347/contents');
+    const data = await response.json();
+    allPosts = data.results || [];
+    displayPosts(allPosts);
+}
+
+
+async function displayPosts(posts) {
+    explorePosts.innerHTML = "";
+
+    if (posts.length === 0) {
+        explorePosts.innerHTML = '<h3 class="no-results">No posts found</h3>';
+        return;
+    }
+
+    for (const post of posts) {
+        const response = await fetch(`/M00988347/profile/${post.username}`);
+        const data = await response.json();
+        const profilePicture = data.profilePicture || "/M00988347/Images/profile.jpg";
+
+        const postItem = document.createElement("div");
+        postItem.className = "post-item";
+
+        const timeDifference = postTimeDifference(new Date(post.createdAt));
+
+        postItem.innerHTML = `
+            <h3 class="timestamp">Posted ${timeDifference}</h3>
+            <img src="${post.image}" alt="Post">
+            <p class="post-caption-heading">${post.title || "Untitled"}</p>
+            <p class="post-caption">${post.caption || ""}</p>
+        `;
+
+        postItem.addEventListener("click", () => {
+            const createdAt = new Date(post.createdAt);
+            openPost(post, post.username, profilePicture, createdAt);
+        });
+
+        explorePosts.appendChild(postItem);
+    }
+}
+
 
 exploreSearch.addEventListener("input", async () => {
     const searchQuery = exploreSearch.value.trim();
 
-    if (searchQuery.length === 0) {
-        exploreUsers.innerHTML = "";
-        explorePosts.innerHTML = "";
+    if (currentTab === "posts") {
+        if (searchQuery.length === 0) {
+            displayPosts(allPosts);
+        } 
+        else {
+            const response = await fetch(`/M00988347/contents?q=${encodeURIComponent(searchQuery)}`);
+            const data = await response.json();
+            displayPosts(data.results);
+        }
+    } 
+    else if (currentTab === "users") {
+        if (searchQuery.length === 0) {
+            exploreUsers.innerHTML = "";
+        } else {
+            const response = await fetch(`/M00988347/users?q=${encodeURIComponent(searchQuery)}`);
+            const data = await response.json();
+            displayUsers(data.userResults);
+        }
+    }
+});
+
+
+function displayUsers(users) {
+    exploreUsers.innerHTML = "";
+
+    if (!users || users.length === 0) {
+        exploreUsers.innerHTML = '<h3 class="no-results">No users found</h3>';
         return;
     }
 
-    const userResponse = await fetch(`/M00988347/users?q=${encodeURIComponent(searchQuery)}`);
-    const userData = await userResponse.json();
-
-    const postResponse = await fetch(`/M00988347/contents?q=${encodeURIComponent(searchQuery)}`);
-    const postData = await postResponse.json();
-
-    searchResults(userData.userResults, postData.results);
-    
-});
-
-async function searchResults(users, posts){
-    exploreUsers.innerHTML = "";
-    explorePosts.innerHTML = "";
-
-    if (users && users.length > 0) {  
-        users.forEach(user => {
-            const userCard = createUserCard(user);
-            exploreUsers.appendChild(userCard);
-        });
-    }
-
-    if (posts && posts.length > 0) {
-        for (const post of posts) {
-            const response = await fetch(`/M00988347/profile/${post.username}`);
-            const data = await response.json();
-            const profilePicture = data.profilePicture || "/M00988347/Images/profile.jpg";
-
-            const postItem = document.createElement("div");
-            postItem.className = "post-item";
-
-            const timeDifference = postTimeDifference(new Date(post.createdAt));
-
-            postItem.innerHTML = `
-                <h3 class="timestamp">Posted ${timeDifference}</h3>
-                <img src="${post.image}" alt="Post">
-                <p class="post-caption-heading">${post.title || "Untitled"}</p>
-                <p class="post-caption">${post.caption || ""}</p>
-            `;
-
-            postItem.addEventListener("click", () => {
-                const createdAt = new Date(post.createdAt);
-                openPost(post, post.username, profilePicture, createdAt);
-            });
-
-            explorePosts.appendChild(postItem);
-        }
-    }
-
-    if ((!users || users.length === 0) && (!posts || posts.length === 0)) {
-        explorePosts.innerHTML = `<h3 class = "no-results">No results found</h3>`;
-    }
-
+    users.forEach(user => {
+        const userCard = createUserCard(user);
+        exploreUsers.appendChild(userCard);
+    });
 }
 
 function createUserCard(user) {
@@ -114,7 +161,6 @@ function createUserCard(user) {
     });
     return userCard;
 }
-
 
 async function createExplorePost(postData){
     const username = postData.username;

@@ -17,6 +17,8 @@ const signupDiv = document.getElementById("signup");
 const actionButtons = document.getElementById("action-buttons");
 const editProfile = document.getElementById("edit-profile");
 
+const protectedRoutes = ['/feedPage', '/explore', '/createPost', '/message', '/travelPlanner', '/userProfile'];
+
 function hideAllSections() {
     wrongSection.style.display = "none";
     homeSection.style.display = "none";
@@ -52,10 +54,11 @@ async function showFeed() {
     await loadFeed();
 }
 
-function showExplore() {
+async function showExplore() {
     hideAllSections();
     exploreSection.style.display = "block";
     mainAppSection.style.display = "block";
+    await loadExplorePosts();
 }
 
 function showCreatePost() {
@@ -69,6 +72,7 @@ async function showMessages(){
     messageSection.style.display = "block";
     mainAppSection.style.display = "block";
     await loadConversations();
+    
 }
 
 function showTravelPlanner(){
@@ -83,12 +87,39 @@ function showUserProfile(){
     mainAppSection.style.display = "block";
 }
 
+
+async function checkLoginStatus() {
+    const response = await fetch("/M00988347/login");
+    const data = await response.json();
+    return data;
+}
+
 async function handleRoute() {
     const path = window.location.pathname;
 
+    const response = await fetch("/M00988347/login");
+    const data = await response.json();
+    
+    for (const route of protectedRoutes) {
+        if (path.endsWith(route) && !data.loggedIn) {
+            showAuthentication();
+            history.replaceState({}, "", "/M00988347/authentication");
+            return; 
+        }
+    }
+
+    if (path.startsWith("/M00988347/userProfile/")) {
+        const username = path.split("/").pop();
+        hideAllSections();
+        userProfileSection.style.display = "block";
+        mainAppSection.style.display = "block";
+        await loadUserProfile(username, false);
+        return;
+    }
+    
     if (path.endsWith("/authentication")) showAuthentication("login");
     else if (path.endsWith("/signup")) showAuthentication("signup");
-    else if (path.endsWith("/feed")) showFeed();
+    else if (path.endsWith("/feedPage")) showFeed();
     else if (path.endsWith("/explore")) showExplore();
     else if (path.endsWith("/createPost")) showCreatePost();
     else if (path.endsWith("/message")) showMessages();
@@ -117,29 +148,45 @@ const appProfilePicture = document.getElementById("nav-profile");
 navMessages.addEventListener("click", () => {
     showMessages();
     history.pushState({}, "", "/M00988347/message");
+    
 });
 
 navFeed.addEventListener("click", async () => {
     showFeed();
-    history.pushState({}, "", "/M00988347/feed");
+    history.pushState({}, "", "/M00988347/feedPage");
+    
 });
 
 navCreate.addEventListener("click", () => {
     showCreatePost();
     history.pushState({}, "", "/M00988347/createPost");
+    
 });
 
 navExplore.addEventListener("click", () => {
     showExplore();
     history.pushState({}, "", "/M00988347/explore");
+   
 });
 
 navPlanner.addEventListener("click", () => {
     showTravelPlanner();
     history.pushState({}, "", "/M00988347/travelPlanner");
+    
 });
 
 
 
+/*unction showChatBot() {
+    const chatbot = document.getElementById("chatbot");
+    const path = window.location.pathname;
 
-
+    if (path.endsWith("/") ||
+        path.endsWith("/message") ||    
+        path.endsWith("/authentication")) {
+        chatbot.style.display = "none";
+    } 
+    else {
+        chatbot.style.display = "block";
+    }
+}*/

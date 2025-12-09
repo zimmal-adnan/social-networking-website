@@ -254,7 +254,7 @@ function openEditProfile(){
             newProfilePictureFile = null;
         } 
         else {
-            alert("Error updating profile");
+            showAlert("Error updating profile");
         }
     };
 }
@@ -267,16 +267,19 @@ document.addEventListener("DOMContentLoaded", () => {
             const username = document.getElementById("profile-username").textContent;
             
             const response = await fetch(`/M00988347/messages/${username}`);
-            const data = await checkResponse.json();
+            const data = await response.json();
 
-            if (!checkData.success) {
-                alert(checkData.message);
+            if (!data.success) {
+                showAlert(data.message);
                 return;
             }
 
             showMessages();
             history.pushState({}, "", "/M00988347/message");
-            await loadChat(username);
+            
+            setTimeout(() => {
+                loadChat(username);
+            }, 100);
         });
     }
 });

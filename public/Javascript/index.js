@@ -33,5 +33,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+function showAlert(message){
+    alertBox = document.createElement("div");
+    alertBox.className = "top-alert";
+    document.body.appendChild(alertBox);
 
+    alertBox.textContent = message;
 
+    alertBox.classList.add("show");
+
+    setTimeout(() => {
+        alertBox.classList.remove("show");
+        alertBox.classList.add("hide");
+        
+        setTimeout(() => {
+            alertBox.remove();
+        }, 500);
+    }, 2500);
+}

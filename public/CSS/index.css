@@ -26,7 +26,7 @@ html, body {
 #home-section {
     position: relative;
     z-index: 10;
-    background-image: url("../Images/indexImages/Space.jpg");
+    background-image: url("../Images/Space.jpg");
     background-size: cover;        
     background-position: center;   
     background-repeat: no-repeat;  
@@ -80,7 +80,7 @@ hr{
     padding: 0.3rem 1.5rem;
     transition: all 0.4s ease;
     cursor: pointer;
-    box-shadow: 0 0 15px rgba(161, 185, 164, 0.445);
+    box-shadow: 0 0 15px rgba(161, 185, 164, 0.45);
 }
 
 .to-login-button::before {
@@ -107,8 +107,6 @@ hr{
     opacity: 1;
     left: 100%;
 }
-
-
 
 .orbit{
     position: fixed;
@@ -147,7 +145,6 @@ hr{
     }
 }
 
-
 #shooting-star{
     position: absolute;
     width: 4px;
@@ -167,3 +164,298 @@ hr{
     background: linear-gradient(90deg,#ffffff81,transparent);
 }
 
+
+.chatbot{
+    border: 3px solid #042627;;
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 100rem;
+    background: #083839;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.chatbot:hover {
+    background: #0e4647;
+    transform: scale(1.1);
+    box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.3);
+}
+
+.chatbot:active {
+    transform: scale(0.95);
+}
+
+.chatbot-box {
+    border: 3px solid #083839;
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 25rem;
+    height: 35rem;
+    border-radius: 1.2rem;
+    box-shadow: 0 0px 10px 5px rgba(0, 0, 0, 0.2);
+    display: none;
+    flex-direction: column;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.chatbot-box.active {
+    display: flex;
+}
+
+.chatbot-header {
+    background: #083839;
+    color: #e0e7cf;
+    padding: 1rem 1.25rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.chatbot-header-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+
+.chatbot-header-left i {
+    font-size: 1.5rem;
+}
+
+.chatbot-header h3 {
+    font-family: "GaretBold";
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.chatbot-header p {
+    font-family: "Garet";
+    margin: 0;
+    font-size: 0.8rem;
+}
+
+
+.chatbot-close {
+    position: absolute;
+    right: 1.25rem;
+    top: 1rem;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.chatbot-close:hover {
+    color: #c90000;
+}
+
+.chatbot-messages {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: #eef3e3;
+    
+}
+
+.chatbot-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chatbot-messages::-webkit-scrollbar-thumb {
+    background: #5c836e;
+    border-radius: 10px;
+}
+
+.chatbot-messages::-webkit-scrollbar-track {
+    background: #718d7e98;
+}
+
+.chatbot-messages::-webkit-scrollbar-thumb:hover {
+    background: #4a6356;
+}
+
+.chatbot-message {
+    display: flex;
+    gap: 0.75rem;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.user-message {
+    flex-direction: row-reverse;
+}
+
+.chat-profile{
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #083839, #0a5456);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.user-message .chat-profile {
+    background: linear-gradient(135deg, #0a5456, #083839);
+}
+
+.chatbot-content {
+    font-family: "Economica";
+    max-width: 70%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.8rem;
+    background: rgb(255, 255, 255);
+    box-shadow: 0 0px 8px 1px rgba(0, 0, 0, 0.1);
+}
+
+.user-message .chatbot-content {
+    background: #083839;
+    color: white;
+    box-shadow: 0 0px 8px 1px rgba(0, 0, 0, 0.3);
+}
+
+.chatbot-content p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.chatbot-input-container {
+    padding: 1rem 1.25rem;
+    background: #8ba396;
+    border-top: 3px solid #738b7e;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+}
+
+.chatbot-input {
+    flex: 1;
+    border: 2px solid #738b7e;
+    border-radius: 2rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    width: 100%;
+    max-height: 1.5rem;
+    font-family: "Economica";
+    transition: all 0.3s ease;
+}
+
+.chatbot-input:focus {
+    outline: none;
+    border-color: #083839;
+}
+
+.chatbot-send {
+    position: absolute;
+    right: 1.5rem;
+    bottom: 1.2rem;
+    width: 3.5rem;
+    height: 2.4rem;
+    border-radius: 100rem;
+    background: #083839;
+    border: none;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.chatbot-send i {
+    font-size: 1.2rem;
+}
+
+
+.chatbot-send:active {
+    transform: scale(0.95);
+}
+
+.chatbot-input:placeholder-shown ~ .chatbot-send {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.top-alert {
+    position: fixed;
+    top: -10rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "GaretBold";
+    background: #b6c29a;
+    border: 3px solid #083839;
+    color: #083839;
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    font-size: 1.2rem;
+    box-shadow: 0 0 8px 3px rgba(0, 0, 0, 0.2);
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease;
+    min-width: 5rem;
+    text-align: center;
+}
+
+.top-alert.show {
+    animation: slideIn 0.5s ease forwards; 
+    opacity: 1;
+    visibility: visible;
+}
+
+.top-alert.hide {
+    animation: slideOut 0.5s ease forwards;
+}
+
+@keyframes slideIn{
+    0%{
+        top: -10rem;
+    }
+
+    100%{
+        top: 2rem;
+    }
+}
+
+@keyframes slideOut {
+    0% {
+        top: 2rem;
+        opacity: 1;
+    }
+    100% {
+        top: -10rem;
+        opacity: 0;
+    }
+}

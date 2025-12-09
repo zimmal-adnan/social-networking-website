@@ -1,5 +1,6 @@
 let currentChatUser = null
 let messageRefresh = null;
+let currentChatInfo = {username: null, profilePicture: null};
 
 async function loadConversations(){
     const response = await fetch("/M00988347/conversations")
@@ -17,7 +18,7 @@ function displayConversations(conversations){
 
     if(conversations.length === 0){
         friendsList.innerHTML = `
-            <div class = "no-conversation">
+            <div class = "no-conversations">
                 <h2>No conversations yet!</h2>
                 <p>Follow users back to start messaging</p>
             </div>
@@ -38,32 +39,37 @@ function displayConversations(conversations){
         `;
 
         friendDiv.addEventListener("click", () => {
-            loadChat(convo.username);
+            loadChat(convo.username, convo.profilePicture);
         });
 
         friendsList.appendChild(friendDiv);
     });
 }
 
-async function loadChat(messagingUsername){
+async function loadChat(messagingUsername, profilePicture){
+    if(messageRefresh){
+        clearInterval(messageRefresh);
+        messageRefresh = null;
+    }
+
+    currentChatInfo.username = messagingUsername;
+    currentChatInfo.profilePicture = profilePicture;
+
     currentChatUser = messagingUsername;
 
     const messagingUser = document.querySelector(".message-username");
-
     messagingUser.textContent = messagingUsername;
+    const messageProfile = document.querySelector(".message-profile");
+    messageProfile.src = profilePicture;
 
     await loadMessages(messagingUsername);
 
-    if(messageRefresh){
-        clearInterval(messageRefresh);
-    }
-
-    messageRefresh= setInterval(() => {
-        loadMessages(messagingUsername);
+    messageRefresh = setInterval(() => {
+        loadMessages(messagingUsername, true);
     }, 3000);
 }
 
-async function loadMessages(messagingUsername){
+async function loadMessages(messagingUsername, refresh = false){
     const response = await fetch(`/M00988347/messages/${messagingUsername}`);
     const data = await response.json();
 
@@ -71,13 +77,16 @@ async function loadMessages(messagingUsername){
         displayMessages(data.messages);
     } 
     else {
-        const chatMessages = document.querySelector(".chat-messages");
-        chatMessages.innerHTML = `
-            <div class="no-messages">
-                <p>${data.message}</p>
-            </div>
-        `;
+        if(!refresh){
+            const chatMessages = document.querySelector(".chat-messages");
+            chatMessages.innerHTML = `
+                <div class="no-messages">
+                    <p>${data.message}</p>
+                </div>
+            `;
+        }
     }
+    scrollToBottom();
 }
 
 function displayMessages(messages){
@@ -89,7 +98,8 @@ function displayMessages(messages){
     if (messages.length === 0) {
         chatMessages.innerHTML = `
             <div class = "no-messages">
-                <p>No messages yet. Start the conversation!</p>
+                <h2>No messages yet</h2>
+                <p>Start the conversation!</p>
             </div>
         `;
         return;
@@ -98,13 +108,16 @@ function displayMessages(messages){
     messages.forEach(message => {
         const messageDiv = document.createElement("div");
 
-        const messageType = message.sender === currentUsername;
-        messageDiv.className = messageType ? "message sent" : "message received";
+        const sent = message.sender === currentUsername;
+        messageDiv.className = sent ? "message sent" : "message received";
 
         const time = formatTime(new Date(message.timestamp));
 
+        const currentUserProfilePicture = document.getElementById("nav-profile").src;
+        const profilePic = sent ? currentUserProfilePicture : currentChatInfo.profilePicture;
+
         messageDiv.innerHTML = `
-            <img src="/M00988347/Images/profile.jpg" alt="Profile">
+            <img src="${profilePic ? profilePic : "/Images/profile.jpg"}" alt="Profile">
             <div class="message-content">
                 <div class="message-bubble">
                     ${message.content}
@@ -114,12 +127,17 @@ function displayMessages(messages){
         `;
 
         chatMessages.appendChild(messageDiv);
+        
     });
+    scrollToBottom();
 }
 
 function formatTime(date) {
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
+    function formatted(number){
+        return number < 10 ? '0' + number : number;
+    }
+    const hours = formatted(date.getHours());
+    const minutes = formatted(date.getMinutes());
     return `${hours}:${minutes}`;
 }
 
@@ -135,7 +153,7 @@ async function sendMessage(){
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
             receiver: currentChatUser,
-            content: content
+            content
         })
     });
 
@@ -147,8 +165,10 @@ async function sendMessage(){
         await loadConversations(); 
     } 
     else{
-        alert(data.message);
+        showAlert(data.message);
     }
+
+    scrollToBottom();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -158,7 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const messageInput = document.getElementById("add-message");
-    messageInput.addEventListener("keypress", (e) => {
+    messageInput.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
             sendMessage();
         }
@@ -166,13 +186,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const searchFriends = document.getElementById("search-friends");
     searchFriends.addEventListener("input", async (e) => {
-        const query = e.target.value.toLowerCase();
+        const query = e.target.value;
         const response = await fetch("/M00988347/conversations");
         const data = await response.json();
 
         if(data.success){
             const filtered = data.conversations.filter(convo =>
-                convo.username.toLowerCase().includes(query)
+                convo.username.includes(query)
             );
             displayConversations(filtered);
         }
@@ -181,7 +201,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 window.addEventListener("beforeunload", () => {
-    if (messageRefreshInterval) {
-        clearInterval(messageRefreshInterval);
+    if (messageRefresh) {
+        clearInterval(messageRefresh);
     }
 });
+
+function scrollToBottom(){
+    const chat = document.querySelector(".chat-messages");
+    chat.scrollTop = chat.scrollHeight;
+}

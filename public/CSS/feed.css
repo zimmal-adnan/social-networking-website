@@ -258,8 +258,8 @@ nav{
 .feed-posts {
     overflow-y: auto;
     max-height: 72vh;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 2rem;
     padding: 2rem;
     margin: 0 auto;
@@ -361,28 +361,100 @@ nav{
     border: 2px solid #083839; 
     box-shadow: 0 0 5px rgba(36, 36, 36, 0.5);
 }
+
 .post-time{
     font-size: 0.8rem;
     color: #a9a9a9;
     font-family: "Economica";
     letter-spacing: 0.5px;
     margin-right: 1.4rem;
+    
 }
 
 .image-wrapper{
     position: relative;
     width: 100%;
-}
-
-.post-image .image {
-    width: 100%;
-    height: 18rem;
-    object-fit: cover;
+    height: 100%;
+    max-height: 26rem;
+    overflow: hidden;
     display: block;
     box-sizing: border-box; 
     border-left: 0.3rem solid white;
     border-right: 0.3rem solid white;
 }
+
+
+.view-post-slider {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.view-post-slide {
+    display: block;
+}
+
+.slide-img {
+    width: 100%;
+    height: 30rem;
+    object-fit: cover;
+    display: inline-flex;
+}
+
+.prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    margin-top: -22px;
+    padding: 16px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+}
+
+
+.next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+.prev:hover, .next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+
+.view-post-dot-container {
+    position: absolute; 
+    bottom: 0.5rem; 
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 10;
+    background-color: white;
+    padding: 0.3rem 1rem;
+    border-radius: 1rem;
+}
+
+.view-dot {
+    cursor: pointer;
+    height: 0.7rem;
+    width: 0.7rem;
+    margin: 0 0.15rem;
+    background-color: #e0e7cf;
+    border-radius: 100rem;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.view-dot-active, .view-dot:hover {
+    background-color: #083839;
+}
+
+
 
 .react {
     position: absolute;
@@ -545,6 +617,10 @@ nav{
     line-height: 1.5;
 }
 
+.like-count{
+    font-family: "Garet";
+    color: #083839;
+}
 
 .comments {
     background-color: #B6C29A;
@@ -746,12 +822,14 @@ nav{
 }
 
 .no-feed-posts{
+    grid-column: 1 / -1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
     color: rgba(118, 129, 109, 0.4);
+    animation: fadeInUp 0.6s ease-out;
 }
 
 .no-feed-posts h2{
@@ -765,3 +843,26 @@ nav{
     font-family: "Garet";
     margin: 0;
 }
+
+.no-comments{
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #859267ad;
+}
+
+.no-comments h2{
+    font-size: 1.1rem;
+    font-family: "GaretBold";
+    margin: 0;
+}
+
+.no-comments p{
+    font-size: 0.8rem;
+    font-family: "Garet";
+    margin: 0;
+}
+

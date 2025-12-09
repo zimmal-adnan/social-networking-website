@@ -69,29 +69,43 @@ function openPost(postData, username, profilePicture, createdAt) {
     submitCommentButton.onclick = null;
 
     submitCommentButton.onclick = async () => {
-        const text = commentInput.value.trim();
-        
-        if (!text) {
-            alert("Please enter a comment");
-            return;
-        }
-        
-        const response = await fetch("/M00988347/comment", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({postID: postData._id, text})
-        });
-        const data = await response.json();
-
-        if (data.success) {
-            const commentsSection = postElement.querySelector(".user-comments");
-            const newComment = createComment(data.comment);
-            commentsSection.prepend(newComment);
-            commentInput.value = "";
-        } else {
-            alert(data.message || "Failed to post comment");
-        }
+        addComment(postElement, postData);
     };
+
+    commentInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            addComment(postElement, postData);
+        }
+    });
+}
+
+
+async function addComment(postElement, postData){
+    
+    const commentInput = postElement.querySelector("#post-comment");
+
+    const text = commentInput.value.trim();
+        
+    const response = await fetch("/M00988347/comment", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({postID: postData._id, text})
+    });
+    const data = await response.json();
+
+    if (data.success) {
+        const commentsSection = postElement.querySelector(".user-comments");
+
+        const noCommentsBox = commentsSection.querySelector(".no-comments");
+        if (noCommentsBox) noCommentsBox.remove();
+
+        const newComment = createComment(data.comment);
+        commentsSection.prepend(newComment);
+        commentInput.value = "";
+    } 
+    else {
+        showAlert(data.message);
+    }
 }
 
 function closePost() {
@@ -106,17 +120,21 @@ async function loadComments(postID) {
     const data = await response.json();
 
     const commentsSection = document.querySelector("#post-overlay .user-comments");
-
     commentsSection.innerHTML = ""; 
 
     if (data.success && data.comments.length > 0) {
-        commentsSection.innerHTML = "";
         data.comments.forEach(comment => {
             const commentBox = createComment(comment);
             commentsSection.appendChild(commentBox);
         });
-    } else {
-        commentsSection.innerHTML = "<p class='no-comments' style='text-align: center; color: #888; padding: 2rem;'>No comments yet. Be the first!</p>";
+    } 
+    else {
+        commentsSection.innerHTML = `
+            <div class = "no-comments">
+                <h2>No comments yet</h2>
+                <p>Be the first!</p>
+            </div>
+        `;
     }
 }
 
@@ -174,19 +192,6 @@ function postTimeDifference(postDate){
 
 
 
-const weatherIcons = {
-    "Sunny": "☀️",
-    "Partly Cloudy": "⛅",
-    "Cloudy": "☁️",
-    "Light Rain": "🌦️",
-    "Heavy Rain": "🌧️",
-    "Thunder": "⛈️",
-    "Hail": "🌨️",
-    "Snow": "❄️",
-    "Foggy": "🌫️",
-    "Windy": "💨"
-};
-
 
 function createComment(comment) {
     const commentDiv = document.createElement("div");
@@ -206,30 +211,73 @@ function createComment(comment) {
         </div>
         <h2 class="comment">${comment.text}</h2>
         <div class="comment-interaction">
-            <i class="fa-regular fa-heart"></i>
-            <i class="fa-regular fa-comment"></i>
+            <div class = like-comment-heart>
+                <i class="fa-regular fa-heart comment-heart" id="comment-heart"></i>
+                <span class="like-count">${comment.likes || 0}</span>
+            </div>
             <i class="fa-regular fa-bookmark"></i>
         </div>
     `;
 
+    const heartIcon = commentDiv.querySelector(".comment-heart");
+    const likeCount = commentDiv.querySelector(".like-count");
+
+    heartIcon.addEventListener("click", async () => {
+        const currentUsername = document.getElementById("profile-username").textContent;
+
+        const response = await fetch("/M00988347/comment/like", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({commentID: comment.commentID})
+        });
+        const data = await response.json();
+
+        if(data.success){
+            likeCount.textContent = data.comment.likes;
+
+            if (data.comment.likedBy.includes(currentUsername)) {
+                heartIcon.classList.replace("fa-regular", "fa-solid");
+            } else {
+                heartIcon.classList.replace("fa-solid", "fa-regular");
+            }
+        }
+    });
+
     return commentDiv;
 }
+
+
+
+
+const weatherIcons = {
+    "Clear Sky": "Images/weatherIcons/Sunny.png",
+    "Few Clouds": "Images/weatherIcons/PartlyCloudy.png",
+    "Scattered Clouds": "Images/weatherIcons/ScatteredClouds.png",
+    "Broken Clouds": "Images/weatherIcons/BrokenClouds.png",
+    "Shower Rain": "Images/weatherIcons/LightRain.png",
+    "Rain": "Images/weatherIcons/HeavyRain.png", 
+    "Thunderstorm": "Images/weatherIcons/Thunder.png",
+    "Snow": "Images/weatherIcons/Snow.png",
+    "Mist": "Images/weatherIcons/Fog.png",
+    "Dust": "Images/weatherIcons/Wind.png"
+};
 
 
 function createPost(postData, username, profilePicture, createdAt) {
     const post = document.createElement("div");
     post.className = "post";
 
+    let images = postData.images || [postData.image];
+
     const timeDifference = postTimeDifference(createdAt);
 
     const weatherType = postData.weather.type || "Sunny";
     const weatherCelsius = postData.weather.celsius;
     const weatherFahrenheit = postData.weather.fahrenheit;
-    const weatherIcon = weatherIcons[weatherType] || "Images/cloudy.png";
+    const weatherIcon = weatherIcons[weatherType] || "Images/weatherIcons/Cloudy.png";
 
     let temperatureDisplay = "";
     temperatureDisplay = `${weatherCelsius}°C / ${weatherFahrenheit}°F`;
-
 
     const currency = postData.budget.currency || "$";
     const budgetMin = postData.budget.min;
@@ -238,7 +286,6 @@ function createPost(postData, username, profilePicture, createdAt) {
     let budgetDisplay = "";
     budgetDisplay = `Budget: ${currency}${budgetMin}k - ${currency}${budgetMax}k`;
    
-
     post.innerHTML = `
         <div class="user-post">
             <div class="post-image">
@@ -250,23 +297,28 @@ function createPost(postData, username, profilePicture, createdAt) {
                     <h5 class="post-time">Posted ${timeDifference}</h5>
                 </div>
                 <div class="image-wrapper">
-                    <img src="${postData.image}" class="image">
+
+                    <div class="view-post-slider" id = "view-post-slider">                        
+                    </div>
+
+                    <div class = "view-post-dot-container" style="text-align: center;">
+                    </div>
+                   
                     <section class="react">
-                        <span class="reaction" title="Already Went!">✅</span>
                         <span class="reaction" title="Love it!">⭐</span>
-                        <span class="reaction" title="Going Soon!">✈️</span>
                         <span class="reaction" title="Planning on Going!">📌</span>
                     </section>
+
                 </div>
                 <div class="bottom-section">
                     <div class="bottom-top">
                         <div class="post-location-wrapper">
                             <i class="fa-solid fa-location-dot"></i>
-                            <h2 class="post-location">${postData.postLocation}</h2>
+                            <h2 class="post-location">${postData.postCountry}, ${postData.postCity}</h2>
                         </div>
                         <div class="post-weather-wrapper">
                             <h2 class="post-weather">${weatherType} <span class="post-temperature">${temperatureDisplay}</span></h2>
-                            <p class = "post-weather-image">${weatherIcon}</p>
+                            <img src="${weatherIcon}" class="post-weather-image" alt="${weatherType}">
                         </div>
                     </div>
                     <h2 class="post-budget">${budgetDisplay}</h2>
@@ -295,13 +347,88 @@ function createPost(postData, username, profilePicture, createdAt) {
                 <input class="post-comment" id = "post-comment" placeholder="Add comment...">
                 <div class="add-comment-actions">
                     <button class="add-comment-element"><i class="fa-regular fa-face-smile-beam"></i></button>
-                    <button class="add-comment-element"><i class="fa-solid fa-camera"></i></button>
                     <button class="add-comment-button" id = "add-comment-button"><i class="fa-solid fa-play"></i></button>
                 </div>
             </div>
         </div>
     `;
 
+    const sliderContainer = post.querySelector(".view-post-slider"); 
+    const dotsContainer = post.querySelector(".view-post-dot-container");
+    let viewPostSlideIndex = 1;
+
+    images.forEach((url, index) => {
+        const slideDiv = document.createElement("div");
+        slideDiv.className = "view-post-slide";
+
+        const numberText = document.createElement("div");
+        numberText.className = "numbertext";
+        numberText.textContent = `${index + 1} / ${images.length}`;
+         
+        const slideImg = document.createElement("img");
+        slideImg.className = "slide-img";
+        
+        slideImg.src = url;
+        
+        slideDiv.appendChild(numberText);
+        slideDiv.appendChild(slideImg);
+        sliderContainer.appendChild(slideDiv);
+    });
+
+    if (images.length > 1) {
+        const prevButton = document.createElement("a");
+        prevButton.className = "prev";
+        prevButton.innerHTML = "&#10094;";
+        prevButton.onclick = () => plusViewSlides(-1);
+        
+        const nextButton = document.createElement("a");
+        nextButton.className = "next";
+        nextButton.innerHTML = "&#10095;";
+        nextButton.onclick = () => plusViewSlides(1);
+        
+        sliderContainer.appendChild(prevButton);
+        sliderContainer.appendChild(nextButton);
+    }
+
+    dotsContainer.innerHTML = "";
+    
+    for (let i = 0; i < images.length; i++) {
+        const dot = document.createElement("span");
+        dot.className = "view-dot";
+        dot.onclick = () => currentViewSlide(i + 1);
+        dotsContainer.appendChild(dot);
+    }
+
+    function showViewSlides(n) {
+        const slides = sliderContainer.getElementsByClassName("view-post-slide");
+        const dots = dotsContainer.getElementsByClassName("view-dot");
+
+        if (n > slides.length) viewPostSlideIndex = 1;
+        if (n < 1) viewPostSlideIndex = slides.length;
+
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+
+        for (let i = 0; i < dots.length; i++) {
+            dots[i].classList.remove("view-dot-active");
+        }
+
+        slides[viewPostSlideIndex - 1].style.display = "block";
+        dots[viewPostSlideIndex - 1].classList.add("view-dot-active");
+    }
+
+    function plusViewSlides(n) {
+        showViewSlides(viewPostSlideIndex += n);
+    }
+
+    function currentViewSlide(n) {
+        showViewSlides(viewPostSlideIndex = n);
+    }
+    showViewSlides(viewPostSlideIndex);
+    
+
     return post;
 }
+
 

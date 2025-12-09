@@ -6,12 +6,19 @@ import path from "path";
 import multer from "multer";
 import fs from "fs";
 import { fileURLToPath } from "url";
-import { WebSocketServer } from "ws";
+import { ObjectId } from 'mongodb'; 
+import Groq from "groq-sdk";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY 
+});
+
+const openWeatherAPI = "87b98df39ed0ae130db8efdb737e0231";
 
 const uploadsFolder = path.join(__dirname, "public", "uploads");
 if (!fs.existsSync(uploadsFolder)) {
@@ -19,16 +26,28 @@ if (!fs.existsSync(uploadsFolder)) {
 }
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
+    destination: function (request, file, cb) {
         cb(null, uploadsFolder);
     },
-    filename: function (req, file, cb) {
-        const uniqueName = Date.now() + '-' + file.originalname;
-        cb(null, uniqueName);
+    filename: function (request, file, cb) {
+        cb(null, file.originalname);
     }
 });
 
-const upload = multer({storage})
+const upload = multer({storage});
+
+const multiUpload = multer({
+    storage,
+    limits: {fileSize: 5 * 1024 * 1024}, 
+    fileFilter: (request, file, cb) => {
+        if (file.mimetype === "image/png" || file.mimetype === "image/jpg" || file.mimetype === "image/jpeg") {
+            cb(null, true);
+        } 
+        else {
+            cb(new Error("Only .png, .jpg and .jpeg allowed!"));
+        }
+    }
+}).array("postImages", 5);
 
 app.use(bodyParser.json());
 app.use(express.json());
@@ -40,8 +59,61 @@ app.use(expressSession({
     cookie: {secure: false}
 }));
 
-const wsClients = new Map();
+app.get("/M00988347/weather/:location", async (request, response) => {
+    const {location} = request.params;
+    try{
+        console.log("Fetching weather for:", location);
+        console.log(`URL: https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${openWeatherAPI}&units=metric`);
+        const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${openWeatherAPI}&units=metric`);
+        
+        if (!weatherResponse.ok) {
+            return response.json({success: false, message: "Location or weather data not found"});
+        }
 
+        const data = await weatherResponse.json();
+        const weatherData = {
+            city: data.name,
+            tempC: Math.round(data.main.temp),
+            temp: data.main.temp,
+            description: data.weather[0].description,
+            id: data.weather[0].id,
+            icon: data.weather[0].icon
+        };
+
+        response.json({success: true, weatherData});
+    }
+    catch (error) {
+        console.error("Weather API error:", error);
+        response.json({success: false, message: "Failed to fetch weather data"});
+    }
+});
+
+
+app.post("/M00988347/chatbot", async (request, response) => {
+    try {
+        const {message} = request.body;
+
+        if (!message) return;
+
+        const completion = await groq.chat.completions.create({
+            messages: [
+                {role: "system", content: "You are a helpful travel assistant. Help users with travel recommendations, tips, and questions about destinations, budgets, and travel planning."},
+                {role: "user", content: message}
+            ],
+            model: 'llama-3.3-70b-versatile', 
+            temperature: 0.7,
+            max_tokens: 1024,
+        });
+
+        const chatbotReply = completion.choices[0].message.content;
+
+        response.json({success: true, reply: chatbotReply});
+
+    } catch (error) {
+        console.log(error);
+        response.json({success: false, reply: "Sorry, I'm having trouble responding right now. Please try again."});
+    }
+});
 
 //registering
 app.post("/M00988347/users", async (request, response) => {
@@ -72,7 +144,6 @@ app.post("/M00988347/users", async (request, response) => {
         errors.confirmPassword = "Passwords do not match";
     }
 
-
     const birth = new Date(dateOfBirth);
     const currentDate = new Date();
 
@@ -82,14 +153,14 @@ app.post("/M00988347/users", async (request, response) => {
         age--;
     }
     if(age < 13){
-        errors.dateOfBirth = "You must be at least 13 years old";
+        errors.date = "You must be at least 13 years old to sign up";
     }
     if (age > 125) {
-        errors.dateOfBirth = "Please enter a valid date of birth";
+        errors.date = "Please enter a valid date of birth";
     }
 
     if(!acceptedTerms){
-        errors.terms = "You must accept the terms & conditions";
+        errors.terms = "Please accept the terms & conditions";
     }
 
     if (Object.keys(errors).length > 0) {
@@ -142,14 +213,6 @@ app.get("/M00988347/login", async (request, response) => {
 
 //logging out
 app.delete("/M00988347/login", async (request, response) => {
-    const username = request.session.user.username;
-
-    if (username && wsClients.has(username)) {
-        const ws = wsClients.get(username);
-        ws.close();
-        wsClients.delete(username);
-    }
-    
     request.session.destroy();
     response.json({success: true, message: "Logged out"});
 });
@@ -185,7 +248,7 @@ app.put("/M00988347/profile/update", async (request, response) => {
     const db = await connectToDatabase();
     const users = db.collection("users");
 
-    await users.updateOne({ username },{ $set: { bio: bio || "" } });
+    await users.updateOne({username}, {$set: { bio: bio || "" }});
 
     response.json({success: true, message: "Profile updated successfully"});
 })
@@ -221,20 +284,46 @@ app.post("/M00988347/contents", async (request, response) => {
         return response.json({success: false, message: "You must be logged in to post content"});
     }
 
-    const {title, caption, budgetCurrency, budgetMin, budgetMax, postLocation, weatherCelsius, weatherFahrenheit, weatherType, image} = request.body;
+    const {title, caption, budgetCurrency, budgetMin, budgetMax, postCountry, postCity, weatherCelsius, weatherFahrenheit, weatherType, image} = request.body;
+
+    const db = await connectToDatabase();
+    const contents = db.collection("contents");
+
+    let errors = {};
 
     const username = request.session.user.username;
 
     if(!image){
-        return response.json({success: false, message: "Post must have pictures"});
+        errors.image = "Please upload picture(s) for your post";
     }
 
-    if(!postLocation){
-        return response.json({success: false, message: "Post must have a location"});
+    if(title && title.length > 35){
+        errors.title = "Title cannot exceed 35 characters";
     }
 
-    const db = await connectToDatabase();
-    const contents = db.collection("contents");
+    if(!postCountry){
+        errors.location = "Please add a country name";
+    }
+
+    if(!postCity){
+        errors.location = "Please add a city name";
+    }
+
+    if(!budgetMax || !budgetMin){
+        errors.budget = "Budget cannot be empty";
+    }
+
+    if(budgetMax < budgetMin){
+        errors.budget = "Maximum budget cannot be higher than the minimum budget";
+    }
+
+    if((weatherCelsius < -200 || weatherCelsius > 200) || (weatherFahrenheit < -500 || weatherFahrenheit > 500)){
+        errors.weather = "Please enter a valid temperature";
+    }
+
+    if (Object.keys(errors).length > 0) {
+        return response.json({success: false, errors});
+    }
 
     const postData = {
         username,
@@ -245,13 +334,15 @@ app.post("/M00988347/contents", async (request, response) => {
             min: budgetMin || null,
             max: budgetMax || null
         },
-        postLocation,
+        postCountry,
+        postCity,
         weather: {
             celsius: weatherCelsius || null,
             fahrenheit: weatherFahrenheit || null,
             type: weatherType || "Sunny"
         },
-        image, 
+        images: Array.isArray(image) ? image : [image], 
+        image: Array.isArray(image) ? image[0] : image,
         createdAt: new Date()
     };
 
@@ -261,18 +352,25 @@ app.post("/M00988347/contents", async (request, response) => {
 });
 
 //uploading post
-app.post("/M00988347/uploadPostImage", upload.single('postImage'), async (request, response) => {
+app.post("/M00988347/uploadPostImage", multiUpload, async (request, response) => {
     if (!request.session.user) {
         return response.json({success: false, message: "You must be logged in to upload images"});
     }
 
-    if (!request.file) {
-        return response.json({success: false, message: "No file uploaded"});
+    const files = request.files;
+
+    if (!files || files.length === 0) {
+        return response.json({success: false, message: "No image(s) uploaded"});
     }
 
-    const imagePath = "/M00988347/uploads/" + request.file.filename;
+    if (files.length > 5) {
+        return response.json({success: false, message: "You can only upload up to 5 images at a time"});
+    }
 
-    response.json({success: true, imagePath, message: "Image uploaded successfully"});
+
+    const imagePaths = files.map(file => "/M00988347/uploads/" + file.filename);
+
+    response.json({success: true, imagePaths, message: "Image uploaded successfully"});
 });
 
 //get user posts
@@ -295,13 +393,21 @@ app.get("/M00988347/contents", async (request, response) => {
     const db = await connectToDatabase();
     const contents = db.collection("contents");
 
-    const results = await contents.find({
-        $or: [
-            {title: {$regex: queryPosts, $options: 'i'}},
-            {caption: {$regex: queryPosts, $options: 'i'}},
-            {postLocation: {$regex: queryPosts, $options: 'i'} }
-        ]
-    }).sort({createdAt: -1}).toArray();
+    let results;
+
+    if (queryPosts.trim() === "") {
+        results = await contents.find({}).sort({createdAt: -1}).toArray();
+    } 
+    else {
+        results = await contents.find({
+            $or: [
+                {title: {$regex: queryPosts, $options: 'i'}},
+                {caption: {$regex: queryPosts, $options: 'i'}},
+                {postCountry: {$regex: queryPosts, $options: 'i'}},
+                {postCity: {$regex: queryPosts, $options: 'i'}}
+            ]
+        }).sort({createdAt: -1}).toArray();
+    }
 
     response.json({success: true, results});
 });
@@ -309,14 +415,9 @@ app.get("/M00988347/contents", async (request, response) => {
 //posting a comment
 app.post("/M00988347/comment", async (request, response) => {
     if (!request.session.user) {
-        return response.json({success: false, message: "You must be logged in to follow someone"});
+        return response.json({success: false, message: "You must be logged in to comment"});
     }
-
     const {postID, text} = request.body;
-
-    if (!text) {
-        return response.json({success: false, message: "Comment is empty"});
-    }
 
     const username = request.session.user.username;
 
@@ -325,12 +426,16 @@ app.post("/M00988347/comment", async (request, response) => {
     const comments = db.collection("comments");
 
     const user = await users.findOne({username});
+    const commentID = new ObjectId().toString();
 
     const commentData = {
+        commentID,
         postID, 
         username, 
         profilePicture: user.profilePicture || "/M00988347/Images/profile.jpg",
         text,
+        likes: 0,
+        likedBy: [],
         createdAt: new Date()
     };
 
@@ -338,6 +443,36 @@ app.post("/M00988347/comment", async (request, response) => {
 
     response.json({success: true, comment: commentData});
 })
+
+
+app.post("/M00988347/comment/like", async (request, response) => {
+    if (!request.session.user) {
+        return response.json({success: false, message: "You must be logged in"});
+    }
+
+    const {commentID} = request.body;
+    const username = request.session.user.username;
+
+    const db = await connectToDatabase();
+    const comments = db.collection("comments");
+
+    const comment = await comments.findOne({commentID});
+   
+    let update;
+    if (comment.likedBy.includes(username)) {
+        update = {$inc: {likes: -1}, $pull: {likedBy: username}};
+    } else {
+        update = {$inc: {likes: 1}, $push: {likedBy: username}};
+    }
+
+    await comments.updateOne({commentID}, update);
+
+    const updatedComment = await comments.findOne({commentID});
+
+    response.json({success: true, comment: updatedComment});
+});
+
+
 
 
 //get comments for a particular post
@@ -508,6 +643,7 @@ app.get("/M00988347/messages/:receiverUser", async (request, response) => {
     const db = await connectToDatabase();
     const messages = db.collection("messages");
     const follows = db.collection("follows");
+    const users = db.collection("users");
 
     const senderFollowing = await follows.findOne({followerUser: username, followingUser: receiverUser});
     const receiverFollowing = await follows.findOne({followerUser: receiverUser, followingUser: username});
@@ -515,6 +651,12 @@ app.get("/M00988347/messages/:receiverUser", async (request, response) => {
     if(!senderFollowing || !receiverFollowing){
         return response.json({success: false, message: "You can only message friends"});
     }
+
+    const senderUser = await users.findOne({username});
+    const receiverUserData = await users.findOne({username: receiverUser});
+
+    const senderPic = senderUser.profilePicture || "/M00988347/Images/profile.jpg";
+    const receiverPic = receiverUserData.profilePicture || "/M00988347/Images/profile.jpg";
     
     const messageList = await messages.find({
         $or: [
@@ -524,7 +666,7 @@ app.get("/M00988347/messages/:receiverUser", async (request, response) => {
     }).sort({timestamp: 1}).toArray();
 
 
-    response.json({success: true, messages: messageList});
+    response.json({success: true, messages: messageList, senderPic, receiverPic});
 });
 
 app.post("/M00988347/messages", async (request, response) => {
@@ -538,6 +680,7 @@ app.post("/M00988347/messages", async (request, response) => {
     const db = await connectToDatabase();
     const follows = db.collection("follows");
     const messages = db.collection("messages");
+    const users = db.collection("users");
 
     const senderFollowing = await follows.findOne({followerUser: sender, followingUser: receiver});
     const receiverFollowing = await follows.findOne({followerUser: receiver, followingUser: sender});
@@ -546,11 +689,15 @@ app.post("/M00988347/messages", async (request, response) => {
         return response.json({success: false, message: "You can only message friends"});
     }
 
+    const senderUser = await users.findOne({username: sender});
+    const senderPic = senderUser.profilePicture || "/M00988347/Images/profile.jpg";
+
     const messageData = {
         sender,
         receiver,
         content,
-        timestamp: new Date()
+        timestamp: new Date(),
+        senderPic
     }
 
     await messages.insertOne(messageData);
@@ -565,42 +712,6 @@ app.get('/M00988347/*splat', (request, response) => {
     response.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-
-const server = app.listen(3000, () => {
+app.listen(3000, () => {
     console.log("Listening on port 3000");
 });
-
-/*const wss = WebSocketServer({server});
-
-wss.on("connection", (ws, request) => {
-    console.log("New connection");
-
-    sessionParser(request, {}, () => {
-        const session = request.session;
-
-        if (!session || !session.user) {
-            ws.close(1008, 'Unauthorized');
-            return;
-        }
-
-        const username = session.user.username;
-        wsClients.set(username, ws);
-        console.log(`User ${username} connected via WebSocket`);
-
-        ws.send(JSON.stringify({type: "connected", username}))
-
-        ws.on("message", async (data) => {
-            const {receiver, content} = message;
-            const sender = username;
-
-            const db = await connectToDatabase();
-            const follows = db.collection("follows");
-            const messages = db.collection("messages");
-
-            const senderFollowing = await follows.findOne({followerUser: sender, followingUser: receiver});
-            const receiverFollowing = await follows.findOne({followerUser: receiver, followingUser: sender});
-
-        })
-    })
-
-})*/

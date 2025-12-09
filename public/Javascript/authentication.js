@@ -107,22 +107,22 @@ cancelSignup.addEventListener('click', (e) => {
 
 
 //authentication page background slideshow
-const slides = document.querySelectorAll('.background-slideshow .slide');
+const slides = document.querySelectorAll('.background-slideshow .backgroundSlide');
 const locationNames = document.querySelectorAll('.background-slideshow .location-name');
-let index = 0;
+let indexForSlides = 0;
 
 function showNextSlide() {
-    slides[index].classList.remove('active');
-    locationNames[index].classList.remove('active');
+    slides[indexForSlides].classList.remove('slide-active');
+    locationNames[indexForSlides].classList.remove('slide-active');
     
-    index = (index + 1) % slides.length;
+    indexForSlides = (indexForSlides + 1) % slides.length;
     
-    slides[index].classList.add('active');
-    locationNames[index].classList.add('active');
+    slides[indexForSlides].classList.add('slide-active');
+    locationNames[indexForSlides].classList.add('slide-active');
 }
 
-slides[0].classList.add('active');
-locationNames[0].classList.add('active');
+slides[0].classList.add('slide-active');
+locationNames[0].classList.add('slide-active');
 
 setInterval(showNextSlide, 4000);
 
@@ -196,20 +196,16 @@ signupRegistrationButton.addEventListener("click", async () => {
                 method: "POST",
                 body: form
             });
-
-            const uploadData = await uploadResponse.json();
-            
-            if (uploadData.success == true) {
-                alert('Successful with profile picture');
-            } 
         } 
 
+        showAlert("Successfully signed in. Welcome!");
+
         await loadUserProfile(username, true);
-        
+
         showFeed();
-        history.pushState({}, "", "/M00988347/feed");
-        selectedProfilePicture = null;
-        signupProfilePicture.src = "Images/profile.jpg"; //standard guest pfp
+        history.pushState({}, "", "/M00988347/feedPage");
+        /*selectedProfilePicture = null;
+        signupProfilePicture.src = "Images/profile.jpg"; //standard guest pfp*/
     } 
     else {
         clearSignupErrors();
@@ -290,9 +286,11 @@ loginRegistrationButton.addEventListener("click", async () => {
     const data = await response.json();
 
     if (data.success == true) {
+        showAlert("Welcome back!");
+
         await loadUserProfile(data.username, true);
         showFeed();
-        history.pushState({}, "", "/M00988347/feed");
+        history.pushState({}, "", "/M00988347/feedPage");
     } else {
 
         for(const field in data.errors){
